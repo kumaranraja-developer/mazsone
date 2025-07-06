@@ -5,6 +5,7 @@ import AppHeader from './Components/Header/AppHeader.tsx';
 import Footer from './Components/footer/Footer.tsx';
 import Login from './pages/auth/Login.tsx';
 import SignUp from './pages/auth/Signup.tsx';
+import ProductPage from './UIBlocks/ProductPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function AppRoutes() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/productpage" element={<ProductPage />} />
       </Routes>
 
       {!hideLayout && <Footer />}

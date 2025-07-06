@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, products }) => {
           <div
             key={product.id}
             className="min-w-[250px] h-[300px] border border-ring p-2 cursor-pointer flex-shrink-0"
-            onClick={() => navigateProductPage(product.id)}
+            onClick={() => navigateProductPage("/productpage")}
           >
             <img
               src={product.image}
