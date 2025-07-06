@@ -177,29 +177,21 @@ function EntryForm({
                                 <Dropdown
                                   id={field.id}
                                   items={field.options || []}
-                                  label={field.label}
                                   value={value}
-                                  onChange={(val) =>
-                                    handleChange(field.id, val)
-                                  }
+                                  onChange={(val) => handleChange(field.id, val)}
                                   err={err}
-                                  className={`border-gray-400 w-full rounded-md p-2 ${field.className}`}
-                                />
+                                  className={`border-gray-400 w-full rounded-md p-2 ${field.className}`} readApi={""} updateApi={""}                                />
                               );
                             case "dropdownmultiple":
                               return (
                                 <Dropdown
                                   id={field.id}
                                   items={field.options || []}
-                                  label={field.label}
                                   value={value}
                                   multiple
-                                  onChange={(val) =>
-                                    handleChange(field.id, val)
-                                  }
+                                  onChange={(val) => handleChange(field.id, val)}
                                   err={err}
-                                  className={`border-gray-400 w-full rounded-md p-2 ${field.className}`}
-                                />
+                                  className={`border-gray-400 w-full rounded-md p-2 ${field.className}`} readApi={""} updateApi={""}                                />
                               );
                             case "dropdownread":
                               return (
