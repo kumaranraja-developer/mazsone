@@ -1,15 +1,9 @@
 import CategoryList from "@/UIBlocks/CategoryList";
-import ProductCard, { type ProductItem } from "@/UIBlocks/ProductCard";
+import ProductCard from "@/UIBlocks/ProductCard";
 import vehicles from "../../assets/category/vehicles.png";
 import BannerCarousel from "@/UIBlocks/BannerCarousel";
 
 function Home() {
-  const demoProducts: ProductItem[] = [
-    { id: 1, title: "Stylish Shirt", image: vehicles, price: 29.99 },
-    { id: 2, title: "Running Shoes", image: vehicles, price: 49.99 },
-    { id: 3, title: "Leather Bag", image: vehicles, price: 39.99 },
-
-  ];
 
   const slides = [
   {
@@ -35,8 +29,8 @@ function Home() {
     <div>
       <CategoryList />
       <BannerCarousel slides={slides} delay={4000}/>
-      <ProductCard title="Popular Items" products={demoProducts} />
-      <ProductCard title="Recommended for You" products={demoProducts} />
+      <ProductCard title="Popular Items" api="/api/products"/>
+      <ProductCard title="Recommended for You" api="/api/products"/>
     </div>
   );
 }

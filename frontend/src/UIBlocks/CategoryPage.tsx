@@ -13,9 +13,9 @@ interface Props {
   category?: string;
 }
 
-const CategoryPage: React.FC<Props> = ({ category }) => {
+const CategoryPage: React.FC<Props> = () => {
   const [product, setProduct] = useState<ProductType[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [cartStates, setCartStates] = useState<Record<number, string>>({});
 
   const navigate = useNavigate();
@@ -107,7 +107,7 @@ const CategoryPage: React.FC<Props> = ({ category }) => {
                 <div onClick={navigateProductPage}>
                   <img
                     className="h-24 w-24 mx-auto"
-                    src={data.image}
+                    src={`http://127.0.0.1:8000/${data.image}`}
                     alt="product"
                   />
                 </div>

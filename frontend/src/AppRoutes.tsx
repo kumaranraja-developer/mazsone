@@ -23,8 +23,8 @@ function AppRoutes() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/productpage" element={<ProductPage />} />
-        <Route path="/category" element={<CategoryPage />} />
+        <Route path="/productpage/:id" element={<ProductPage />} />
+        <Route path="/category/:category" element={<CategoryPage />} />
 
         {/* Catch-all route for unmatched paths */}
         <Route path="*" element={<NotFound />} />
