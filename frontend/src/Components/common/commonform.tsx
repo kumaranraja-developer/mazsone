@@ -1,56 +1,58 @@
-// Import statements remain the same...
+// CommonForm.tsx
 import { useEffect, useRef, useState } from "react";
 import Button from "../Input/Button";
 import { TextArea } from "../Input/TextArea";
 import Dropdown from "../Input/Dropdown";
 import Switch from "../Input/switch";
 import Checkbox from "../Input/checkbox";
-import Alert from "../Alert/Alert";
 import MultiCheckbox from "../Input/MultiCheckbox";
 import PasswordInput from "../Input/passwordInput";
 import { DatePicker } from "../Datepicker/Datepicker";
 import FileUpload from "../Input/FileInput";
 import DropdownRead from "../Input/Dropdown-read";
 import FloatingInput from "../Input/FloatingInput";
-import CommonTable, { type TableRowData } from "./commontable";
-import { format } from "date-fns";
 import ImageButton from "../Button/ImageBtn";
 import apiClient from "@/pages/app/api/apiClients";
-
-type FieldType =
-  | "textinput"
-  | "textarea"
-  | "dropdown"
-  | "switch"
-  | "checkbox"
-  | "calendar"
-  | "multicheckbox"
-  | "password"
-  | "date"
-  | "file"
-  | "dropdownread"
-  | "dropdownreadmultiple"
-  | "dropdownmultiple";
+import { format } from "date-fns";
 
 export type Field = {
   className: string;
   id: string;
   label: string;
-  type: FieldType;
+  type:
+    | "textinput"
+    | "textarea"
+    | "dropdown"
+    | "switch"
+    | "checkbox"
+    | "calendar"
+    | "multicheckbox"
+    | "password"
+    | "date"
+    | "file"
+    | "dropdownread"
+    | "dropdownreadmultiple"
+    | "dropdownmultiple";
   options?: string[];
   errMsg: string;
-  readApi:string;
-  updateApi:string;
+  readApi?: string;
+  updateApi?: string;
   apiKey?: string;
-  createKey?:string
+  createKey?: string;
 };
 
 export type FieldGroup = {
   title: string;
   sectionKey?: string;
   fields: Field[];
-  // api:string;
 };
+
+export interface ApiList {
+  create: string;
+  read: string;
+  update: string;
+  delete: string;
+}
 
 type CommonFormProps = {
   groupedFields: FieldGroup[];
@@ -61,58 +63,35 @@ type CommonFormProps = {
   successMsg: string;
   faildMsg: string;
   initialData?: Record<string, any>;
-  bulkData?: TableRowData[];
   onSubmit?: (data: any) => void;
-  multipleEntry?: boolean;
   api: ApiList;
 };
 
-export interface ApiList {
-  create: string;
-  read: string;
-  update: string;
-  delete: string;
-}
 function CommonForm({
   groupedFields,
   isPopUp,
   formName,
   formOpen,
   setFormOpen,
-  successMsg,
   faildMsg,
   initialData = {},
-  bulkData,
   onSubmit,
-  multipleEntry = true,
   api,
 }: CommonFormProps) {
-  const [formData, setFormData] = useState<Record<string, any>>(initialData);
+  const [formData, setFormData] = useState(initialData);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertType, setAlertType] = useState<
-    "success" | "warning" | "update" | "delete"
-  >("success");
-  const [alertMessage, setAlertMessage] = useState("");
-  const [previewData, setPreviewData] = useState<TableRowData[]>([]);
-  const [, setEditPreviewIndex] = useState<number | null>(null);
 
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   useEffect(() => {
-    if (initialData) setFormData(initialData);
+    setFormData(initialData);
   }, [initialData]);
-
-  useEffect(() => {
-    setPreviewData(bulkData || []);
-  }, [bulkData]);
 
   const handleChange = (id: string, value: any) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
   const validateField = (field: Field, value: any): string => {
-    const label = field.label.toLowerCase();
     if (
       (Array.isArray(value) && value.length === 0) ||
       value === "" ||
@@ -122,76 +101,21 @@ function CommonForm({
     )
       return field.errMsg;
 
-    if (label.includes("phone") && !/^[6-9]\d{9}$/.test(value))
+    if (
+      field.label.toLowerCase().includes("email") &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+    ) {
       return field.errMsg;
-    if (label.includes("email") && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+    }
+
+    if (
+      field.label.toLowerCase().includes("phone") &&
+      !/^[6-9]\d{9}$/.test(value)
+    ) {
       return field.errMsg;
+    }
 
     return "";
-  };
-
-  const triggerAlert = (
-    type: "success" | "warning" | "update" | "delete",
-    message: string
-  ) => {
-    setAlertType(type);
-    setAlertMessage(message);
-    setAlertVisible(true);
-  };
-
-  const handleAdd = () => {
-    const itemsGroup = groupedFields.find(
-      (g) => g.title.toLowerCase() === "items"
-    );
-    if (!itemsGroup) return;
-
-    const errors: Record<string, string> = {};
-    itemsGroup.fields.forEach((field) => {
-      const value = formData[field.id];
-      const error = validateField(field, value);
-      if (error) errors[field.id] = error;
-    });
-
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
-
-    const entryWithId: TableRowData = {
-      id: `temp-${Date.now()}`,
-      ...formData,
-    };
-
-    setPreviewData((prev) => [...prev, entryWithId]);
-
-    const cleared = { ...formData };
-    itemsGroup.fields.forEach((field) => {
-      cleared[field.id] = "";
-    });
-    setFormData(cleared);
-    setFormErrors({});
-
-    setTimeout(() => {
-      const first = itemsGroup.fields[0]?.id;
-      if (first && inputRefs.current[first]) inputRefs.current[first]?.focus();
-    }, 10);
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    currentId: string,
-    fields: Field[],
-    groupTitle: string
-  ) => {
-    if (e.key !== "Enter") return;
-
-    e.preventDefault();
-    const currentIndex = fields.findIndex((f) => f.id === currentId);
-    const nextField = fields[currentIndex + 1];
-
-    if (nextField) {
-      inputRefs.current[nextField.id]?.focus();
-    } else if (groupTitle.toLowerCase() === "items" && multipleEntry) {
-      handleAdd();
-    }
   };
 
   const handleSubmit = () => {
@@ -207,77 +131,62 @@ function CommonForm({
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    const fixed = { ...formData };
-    for (const key in fixed) {
-      const value = fixed[key];
-      if (value instanceof Date) {
-        fixed[key] = format(value, "yyyy-MM-dd");
+    const cleaned = { ...formData };
+
+    for (const key in cleaned) {
+      const val = cleaned[key];
+      if (val instanceof Date) {
+        cleaned[key] = format(val, "yyyy-MM-dd");
       }
     }
 
-    // 🔑 Clean the payload
-    const cleaned = Object.fromEntries(
-      Object.entries(fixed).filter(([key]) => !["id", "action"].includes(key))
-    );
-
     const isUpdate = !!initialData?.id;
+    const endpoint = isUpdate ? `${api.update}/${initialData.id}` : api.create;
+    const method = isUpdate ? apiClient.put : apiClient.post;
 
-    const apiCall = isUpdate
-      ? apiClient.put(`${api.update}/${initialData.id}`, { data: cleaned })
-      : apiClient.post(api.create, { data: cleaned });
+    const formDataToSend = new FormData();
+    Object.entries(cleaned).forEach(([key, val]) => {
+      if (val instanceof File) {
+        formDataToSend.append(key, val);
+      } else if (Array.isArray(val)) {
+        val.forEach((v) => formDataToSend.append(`${key}[]`, v));
+      } else if (typeof val === "boolean") {
+        formDataToSend.append(key, val ? "1" : "0");
+      } else if (val !== undefined && val !== null && val !== "") {
+        formDataToSend.append(key, val);
+      }
+    });
 
-    apiCall
+    method(endpoint, formDataToSend, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
       .then((res) => {
-        const savedData = res.data?.data;
-        const newRow: TableRowData = {
-          id:
-            savedData?.name ||
-            `perm-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+        const saved = res.data?.data || {};
+        const finalData = {
+          id: saved.name || `perm-${Date.now()}`,
           ...cleaned,
         };
-
-        onSubmit?.(newRow);
-        setFormData({});
-        setFormErrors({});
+        onSubmit?.(finalData);
         setFormOpen?.(false);
-        triggerAlert("success", successMsg);
       })
       .catch((err) => {
-        console.error("❌ Submission failed:", err);
-
-        // Try to parse Frappe validation message
-        let msg = "Submission failed";
-
-        try {
-          const serverMsg = err.response?.data?._server_messages;
-          if (serverMsg) {
-            const parsed = JSON.parse(serverMsg)[0];
-            msg = JSON.parse(parsed)?.message || parsed;
-          } else {
-            msg =
-              err.response?.data?.message ||
-              err.response?.data?.exc_type ||
-              faildMsg;
-          }
-        } catch {
-          // fallback
-          msg = faildMsg;
+        const validationErrors = err.response?.data?.errors;
+        if (validationErrors) {
+          console.error("Validation errors:", validationErrors);
+          alert(Object.values(validationErrors).flat().join("\n"));
+        } else {
+          console.error("Form submission failed:", err);
+          alert(err.response?.data?.message || faildMsg);
         }
-
-        triggerAlert("warning", msg);
       });
   };
 
   if (!formOpen) return null;
 
   return (
-    <div
-      className={
-        isPopUp
-          ? "fixed inset-0 bg-black/60 z-50 flex items-center justify-center"
-          : ""
-      }
-    >
+    <div className={isPopUp ? "fixed inset-0 bg-black/60 z-50 flex items-center justify-center" : ""}>
       <div
         className={
           isPopUp
@@ -293,8 +202,6 @@ function CommonForm({
             onClick={() => {
               setFormData({});
               setFormErrors({});
-              setPreviewData([]);
-              triggerAlert("delete", faildMsg);
               setFormOpen?.(false);
             }}
           />
@@ -303,13 +210,14 @@ function CommonForm({
         <div className="flex flex-col gap-5 border border-ring/30 p-5 rounded-md">
           {groupedFields.map((group) => (
             <div key={group.title} className="flex flex-col gap-4">
-              <h2 className="text- font-semibold text-primary pb-1">
+              <h2 className="text-md font-semibold text-primary pb-1">
                 {group.title}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {group.fields.map((field) => {
                   const err = formErrors[field.id] || "";
                   const value = formData[field.id] || "";
+                  const isFileField = field.type === "file";
 
                   const commonProps = {
                     key: field.id,
@@ -317,9 +225,9 @@ function CommonForm({
                     value,
                     err,
                     onChange: (e: any) =>
-                      handleChange(field.id, e.target?.value ?? e),
-                    onKeyDown: (e: any) =>
-                      handleKeyDown(e, field.id, group.fields, group.title),
+                      isFileField
+                        ? handleChange(field.id, e)
+                        : handleChange(field.id, e.target?.value ?? e),
                     className: `${field.className} rounded-md`,
                     ref: (el: any) => (inputRefs.current[field.id] = el),
                   };
@@ -336,55 +244,30 @@ function CommonForm({
                     case "textarea":
                       return <TextArea {...commonProps} label={field.label} />;
                     case "dropdown":
-                      return (
-                        <Dropdown
-                          {...commonProps}
-                          items={field.options || []}
-                          placeholder={field.label}
-                          readApi={field.readApi}
-                          updateApi={field.updateApi}
-                          apiKey={field.apiKey} 
-                          createKey={field.createKey} 
-                          
-                        />
-                      );
                     case "dropdownmultiple":
                       return (
                         <Dropdown
+                          readApi={""}
+                          updateApi={""}
                           {...commonProps}
-                          multiple
                           items={field.options || []}
+                          multiple={field.type === "dropdownmultiple"}
                           placeholder={field.label}
-                          readApi={field.readApi}
-                          updateApi={field.updateApi}
-                          apiKey={field.apiKey} 
-                          createKey={field.createKey} 
-
+                          apiKey={field.apiKey}
+                          createKey={field.createKey}
                         />
                       );
                     case "dropdownread":
-                      return (
-                        <DropdownRead
-                          placeholder={""}
-                          {...commonProps}
-                          items={field.options || []}
-                          label={field.label}
-                          readApi={field.readApi}
-                          // updateApi={field.updateApi}
-                          apiKey={field.apiKey} 
-                        />
-                      );
                     case "dropdownreadmultiple":
                       return (
                         <DropdownRead
                           placeholder={""}
                           {...commonProps}
-                          multiple
-                          items={field.options || []}
                           label={field.label}
+                          items={field.options || []}
+                          multiple={field.type === "dropdownreadmultiple"}
                           readApi={field.readApi}
-                          // updateApi={field.updateApi}
-                          apiKey={field.apiKey} 
+                          apiKey={field.apiKey}
                         />
                       );
                     case "switch":
@@ -423,73 +306,27 @@ function CommonForm({
                             value instanceof Date
                               ? value
                               : value
-                              ? new Date(String(value))
+                              ? new Date(value)
                               : undefined
                           }
                           label={field.label}
                         />
                       );
                     case "file":
-                      return <FileUpload key={field.id} id={field.id} />;
+                      return (
+                        <FileUpload
+                          key={field.id}
+                          id={field.id}
+                          onChange={(file) => handleChange(field.id, file)}
+                        />
+                      );
                     default:
                       return null;
                   }
                 })}
-                {multipleEntry && group.title.toLowerCase() === "items" && (
-                  <div className="col-span-full flex justify-end">
-                    <Button
-                      label="Add"
-                      className="bg-create text-create-foreground"
-                      onClick={handleAdd}
-                    />
-                  </div>
-                )}
               </div>
             </div>
           ))}
-
-          {multipleEntry &&
-            groupedFields.some((g) => g.title.toLowerCase() === "items") && (
-              <CommonTable
-                head={[
-                  { key: "id", label: "ID" },
-                  ...groupedFields
-                    .find((g) => g.title.toLowerCase() === "items")!
-                    .fields.map((f) => ({
-                      key: f.id,
-                      label: f.label,
-                    })),
-                  { key: "action", label: "Action" },
-                ]}
-                body={previewData.map((entry) => {
-                  const fields = groupedFields.find(
-                    (g) => g.title.toLowerCase() === "items"
-                  )!.fields;
-                  return {
-                    ID: entry.id,
-                    ...fields.reduce((acc, field) => {
-                      const val = entry[field.id];
-                      acc[field.id] =
-                        val instanceof Date
-                          ? val.toLocaleDateString?.() ?? val
-                          : val ?? "";
-                      return acc;
-                    }, {} as TableRowData),
-                  };
-                })}
-                onEdit={(row, index) => {
-                  setFormData(row);
-                  setEditPreviewIndex(index);
-                }}
-                onDelete={(index) => {
-                  setPreviewData((prev) => prev.filter((_, i) => i !== index));
-                }}
-                currentPage={1}
-                rowsPerPage={10}
-                totalCount={previewData.length}
-                onPageChange={() => {}}
-              />
-            )}
 
           <div className="flex justify-end gap-5 mt-4">
             <Button
@@ -498,8 +335,6 @@ function CommonForm({
               onClick={() => {
                 setFormData({});
                 setFormErrors({});
-                setPreviewData([]);
-                triggerAlert("delete", faildMsg);
                 setFormOpen?.(false);
               }}
             />
@@ -510,15 +345,6 @@ function CommonForm({
             />
           </div>
         </div>
-      </div>
-
-      <div className="absolute top-0 right-0">
-        <Alert
-          type={alertType}
-          message={alertMessage}
-          show={alertVisible}
-          onClose={() => setAlertVisible(false)}
-        />
       </div>
     </div>
   );

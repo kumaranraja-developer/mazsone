@@ -79,7 +79,7 @@ function AppHeader() {
 ];
 
   return (
-    <header className="px-2 sm:px-5 py-1 bg-background border-b border-ring/20">
+   <header className="sticky top-0 z-50 px-2 sm:px-5 py-1 bg-background border-b border-ring/20">
       {showMobileSearch ? (
         <div className="flex justify-end p-2 gap-2 w-full">
           <GlobalSearch className="flex-1 w-full" />

@@ -1,90 +1,89 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react";
 
 interface FilePreview {
-  file: File
-  progress: number
+  file: File;
+  progress: number;
 }
 
-interface FileUploadProps{
-  id:string
+interface FileUploadProps {
+  id: string;
+  onChange?: (file: File | undefined) => void;
 }
 
-function FileUpload({id}:FileUploadProps) {
-  const [previews, setPreviews] = useState<FilePreview[]>([])
-  const inputRef = useRef<HTMLInputElement | null>(null)
+function FileUpload({ id, onChange }: FileUploadProps) {
+  const [previews, setPreviews] = useState<FilePreview[]>([]);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files) return
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const newPreviews = Array.from(files).map((file) => ({
-      file,
-      progress: 0,
-    }))
+    const selectedFile = files[0];
+    const newPreview: FilePreview = { file: selectedFile, progress: 0 };
 
-    setPreviews([...previews, ...newPreviews])
-    simulateUpload(newPreviews)
-  }
+    setPreviews([newPreview]);
+    simulateUpload([newPreview]);
+
+    onChange?.(selectedFile);
+  };
 
   const simulateUpload = (files: FilePreview[]) => {
     files.forEach((fp) => {
       const interval = setInterval(() => {
         setPreviews((prev) => {
-          const updated = [...prev]
-          const target = updated.find((p) => p.file === fp.file)
-          if (!target) return prev
+          const updated = [...prev];
+          const target = updated.find((p) => p.file === fp.file);
+          if (!target) return prev;
 
-          target.progress += 10
+          target.progress += 10;
           if (target.progress >= 100) {
-            target.progress = 100
-            clearInterval(interval)
+            target.progress = 100;
+            clearInterval(interval);
           }
-          return [...updated]
-        })
-      }, 200)
-    })
-  }
+
+          return [...updated];
+        });
+      }, 100);
+    });
+  };
 
   const removeFile = (fileToRemove: File) => {
-    setPreviews((prev) => prev.filter((fp) => fp.file !== fileToRemove))
-  }
+    setPreviews((prev) => prev.filter((fp) => fp.file !== fileToRemove));
+    onChange?.(undefined);
+  };
 
-  const triggerInput = () => {
-    inputRef.current?.click()
-  }
+  useEffect(() => {
+    if (previews.length === 0 && inputRef.current) {
+      inputRef.current.value = "";
+    }
+  }, [previews]);
 
   return (
     <div className="space-y-4">
-      {/* Trigger Zone */}
       <div
         className="cursor-pointer p-12 flex justify-center bg-white border border-dashed border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-neutral-600"
-        onClick={triggerInput}
+        onClick={() => inputRef.current?.click()}
       >
         <input
-        id={id}
+          id={id}
           type="file"
-          multiple
           ref={inputRef}
           className="hidden"
+          accept="image/png, image/jpeg, image/jpg, image/gif"
           onChange={handleFileSelect}
         />
         <div className="text-center">
-          <span className="inline-flex justify-center items-center size-16">
-            📁
-          </span>
+          <span className="inline-flex justify-center items-center size-16">📁</span>
           <div className="mt-4 text-sm text-gray-600 dark:text-neutral-200">
             <span className="font-medium">Drop your file here</span> or{" "}
-            <span className="text-blue-600 font-semibold hover:underline">
-              browse
-            </span>
+            <span className="text-blue-600 font-semibold hover:underline">browse</span>
           </div>
           <p className="text-xs text-gray-400 dark:text-neutral-400 mt-1">
-            Pick a file up to 2MB.
+            Pick an image file up to 2MB.
           </p>
         </div>
       </div>
 
-      {/* File Previews */}
       {previews.length > 0 && (
         <div className="space-y-2">
           {previews.map(({ file, progress }) => (
@@ -125,7 +124,7 @@ function FileUpload({id}:FileUploadProps) {
               <div className="flex items-center gap-3">
                 <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700">
                   <div
-                    className={`h-full bg-blue-600 text-xs text-white text-center transition-all duration-500 ${
+                    className={`h-full bg-blue-600 transition-all duration-300 ${
                       progress >= 100 ? "bg-green-500" : ""
                     }`}
                     style={{ width: `${progress}%` }}
@@ -140,7 +139,7 @@ function FileUpload({id}:FileUploadProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default FileUpload
+export default FileUpload;

@@ -1,11 +1,14 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Home from './pages/app/Home.tsx';
-import Cart from './pages/app/Cart.tsx';
-import AppHeader from './Components/Header/AppHeader.tsx';
-import Footer from './Components/footer/Footer.tsx';
-import Login from './pages/auth/Login.tsx';
-import SignUp from './pages/auth/Signup.tsx';
-import ProductPage from './UIBlocks/ProductPage.tsx';
+import Home from './pages/app/Home';
+import Cart from './pages/app/Cart';
+import AppHeader from './Components/Header/AppHeader';
+import Footer from './Components/footer/Footer';
+import Login from './pages/auth/Login';
+import SignUp from './pages/auth/Signup';
+import ProductPage from './UIBlocks/ProductPage';
+import CategoryPage from './UIBlocks/CategoryPage';
+import NotFound from './Components/NotFound';
+import ProductForm from './pages/app/Forms/ProductForm';
 
 function AppRoutes() {
   const location = useLocation();
@@ -21,6 +24,11 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/productpage" element={<ProductPage />} />
+        <Route path="/category" element={<CategoryPage />} />
+
+        {/* Catch-all route for unmatched paths */}
+        <Route path="*" element={<NotFound />} />
+        <Route path="/productform" element={<ProductForm />} />
       </Routes>
 
       {!hideLayout && <Footer />}
