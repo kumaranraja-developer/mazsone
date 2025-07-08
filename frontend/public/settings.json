@@ -23,9 +23,10 @@
           "isForm": true
         },
         {
-          "key": "image",
+          "key": "images",
           "label": "Image",
           "type": "file",
+          "multiple":true,
           "inTable": true,
           "isForm": true
         },

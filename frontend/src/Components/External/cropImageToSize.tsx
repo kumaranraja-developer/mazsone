@@ -1,43 +1,34 @@
-export const cropImageToSize = (
+export async function cropImageToSize(
   file: File,
-  width = 200,
-  height = 200,
-  quality = 0.6
-): Promise<File> => {
+  width: number,
+  height: number,
+  quality: number = 0.8
+): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.src = url;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      img.src = reader.result as string;
+    };
 
     img.onload = () => {
-      const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
-      const ctx = canvas.getContext("2d");
-
-      if (!ctx) return reject("Canvas not supported");
-
-      // Crop center
-      const scale = Math.min(img.width / width, img.height / height);
-      const cropWidth = width * scale;
-      const cropHeight = height * scale;
-      const offsetX = (img.width - cropWidth) / 2;
-      const offsetY = (img.height - cropHeight) / 2;
-
-      ctx.drawImage(img, offsetX, offsetY, cropWidth, cropHeight, 0, 0, width, height);
-
+      ctx?.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
-          if (!blob) return reject("Failed to convert canvas to blob");
-          const compressedFile = new File([blob], file.name, { type: file.type });
-          URL.revokeObjectURL(url);
-          resolve(compressedFile);
+          if (!blob) return reject("Compression failed");
+          resolve(new File([blob], file.name, { type: "image/jpeg" }));
         },
-        file.type === "image/jpeg" ? "image/jpeg" : "image/png",
+        "image/jpeg",
         quality
       );
     };
 
-    img.onerror = reject;
+    img.onerror = (err) => reject(err);
   });
-};
+}

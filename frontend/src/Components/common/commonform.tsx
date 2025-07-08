@@ -39,6 +39,7 @@ export type Field = {
   updateApi?: string;
   apiKey?: string;
   createKey?: string;
+  multiple?: boolean;
 };
 
 export type FieldGroup = {
@@ -146,16 +147,29 @@ function CommonForm({
 
     const formDataToSend = new FormData();
     Object.entries(cleaned).forEach(([key, val]) => {
-      if (val instanceof File) {
-        formDataToSend.append(key, val);
-      } else if (Array.isArray(val)) {
-        val.forEach((v) => formDataToSend.append(`${key}[]`, v));
-      } else if (typeof val === "boolean") {
-        formDataToSend.append(key, val ? "1" : "0");
-      } else if (val !== undefined && val !== null && val !== "") {
-        formDataToSend.append(key, val);
+  const isImageField = key === 'image' || key === 'images';
+  const fieldKey = isImageField ? 'images' : key;
+
+  if (Array.isArray(val)) {
+    val.forEach((item) => {
+      if (item instanceof File) {
+        formDataToSend.append(`${fieldKey}[]`, item); // ✅ appending each file
+      } else {
+        formDataToSend.append(`${fieldKey}[]`, item);
       }
     });
+  } else if (val instanceof File) {
+    formDataToSend.append(`${fieldKey}[]`, val); // ✅ still appending, not setting
+  } else if (typeof val === 'boolean') {
+    formDataToSend.append(fieldKey, val ? '1' : '0');
+  } else if (val !== undefined && val !== null && val !== '') {
+    formDataToSend.append(fieldKey, val);
+  }
+});
+// for (let pair of formDataToSend.entries()) {
+//   console.log(pair[0], pair[1]);
+// }
+
 
     method(endpoint, formDataToSend, {
       headers: {
@@ -186,7 +200,13 @@ function CommonForm({
   if (!formOpen) return null;
 
   return (
-    <div className={isPopUp ? "fixed inset-0 bg-black/60 z-50 flex items-center justify-center" : ""}>
+    <div
+      className={
+        isPopUp
+          ? "fixed inset-0 bg-black/60 z-50 flex items-center justify-center"
+          : ""
+      }
+    >
       <div
         className={
           isPopUp
@@ -318,6 +338,7 @@ function CommonForm({
                           key={field.id}
                           id={field.id}
                           onChange={(file) => handleChange(field.id, file)}
+                          multiple={field.multiple}
                         />
                       );
                     default:

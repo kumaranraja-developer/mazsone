@@ -25,14 +25,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, api }) => {
       const response = await apiClient.get(api);
       const apiData = response.data.data || response.data;
 
-      const formatted = apiData.map((item: any) => ({
-        id: item.id,
-        title: item.name || item.title, // fallback
-        image: item.image?.startsWith("http")
-          ? item.image
-          : `http://127.0.0.1:8000/${item.image}`,
-        price: item.price,
-      }));
+      const formatted = apiData.map((item: any) => {
+  const firstImage = item.images?.[0]?.path;
+  return {
+    id: item.id,
+    title: item.name || item.title,
+    image: firstImage
+      ? firstImage.startsWith("http")
+        ? firstImage
+        : `http://127.0.0.1:8000/${firstImage}`
+      : "/placeholder.png", // fallback if no image
+    price: item.price,
+  };
+});
+
 
       setProducts(formatted);
     } catch (error) {

@@ -8,10 +8,11 @@ interface FilePreview {
 
 interface FileUploadProps {
   id: string;
-  onChange?: (file: File | undefined) => void;
+  onChange?: (files: File[]) => void;
+   multiple?: boolean;
 }
 
-function FileUpload({ id, onChange }: FileUploadProps) {
+function FileUpload({ id, onChange, multiple }: FileUploadProps) {
   const [previews, setPreviews] = useState<FilePreview[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -19,18 +20,22 @@ function FileUpload({ id, onChange }: FileUploadProps) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const originalFile = files[0];
-    try {
-      const croppedCompressedFile = await cropImageToSize(originalFile, 200, 200, 0.6);
+    const fileArray = Array.from(files);
+    const processedPreviews: FilePreview[] = [];
 
-      const newPreview: FilePreview = { file: croppedCompressedFile, progress: 0 };
-      setPreviews([newPreview]);
-      simulateUpload([newPreview]);
-
-      onChange?.(croppedCompressedFile);
-    } catch (err) {
-      console.error("Image crop/compression failed:", err);
+    for (const file of fileArray) {
+      try {
+        const croppedFile = await cropImageToSize(file, 200, 200, 0.6);
+        processedPreviews.push({ file: croppedFile, progress: 0 });
+      } catch (err) {
+        console.error("Failed to process file:", file.name, err);
+      }
     }
+
+    setPreviews((prev) => [...prev, ...processedPreviews]);
+    simulateUpload(processedPreviews);
+    onChange?.([...previews.map((p) => p.file), ...processedPreviews.map((p) => p.file)]); // ✅ all files
+
   };
 
   const simulateUpload = (files: FilePreview[]) => {
@@ -54,8 +59,9 @@ function FileUpload({ id, onChange }: FileUploadProps) {
   };
 
   const removeFile = (fileToRemove: File) => {
-    setPreviews((prev) => prev.filter((fp) => fp.file !== fileToRemove));
-    onChange?.(undefined);
+    const updatedPreviews = previews.filter((fp) => fp.file !== fileToRemove);
+    setPreviews(updatedPreviews);
+    onChange?.(updatedPreviews.map((p) => p.file));
   };
 
   useEffect(() => {
@@ -73,6 +79,7 @@ function FileUpload({ id, onChange }: FileUploadProps) {
         <input
           id={id}
           type="file"
+           multiple={multiple} 
           ref={inputRef}
           className="hidden"
           accept="image/png, image/jpeg, image/jpg, image/gif"
@@ -81,11 +88,11 @@ function FileUpload({ id, onChange }: FileUploadProps) {
         <div className="text-center">
           <span className="inline-flex justify-center items-center size-16">📁</span>
           <div className="mt-4 text-sm text-gray-600 dark:text-neutral-200">
-            <span className="font-medium">Drop your file here</span> or{" "}
+            <span className="font-medium">Drop your files here</span> or{" "}
             <span className="text-blue-600 font-semibold hover:underline">browse</span>
           </div>
           <p className="text-xs text-gray-400 dark:text-neutral-400 mt-1">
-            Pick an image file up to 2MB.
+            Pick image files up to 2MB each.
           </p>
         </div>
       </div>
