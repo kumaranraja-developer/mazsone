@@ -36,8 +36,8 @@ const CategoryPage: React.FC<Props> = () => {
       });
   }, []);
 
-  const navigateProductPage = () => {
-    navigate("/Product");
+  const navigateProductPage = (id: number) => {
+    navigate(`/productpage/${id}`);
   };
 
   const changeCart = (id: number) => {
@@ -104,7 +104,7 @@ const CategoryPage: React.FC<Props> = () => {
           {product.map((data) => (
             <div key={data.id}>
               <div className="grid grid-cols-[25%_50%_25%] items-center mx-5 gap-4 p-4">
-                <div onClick={navigateProductPage}>
+                <div onClick={()=>{navigateProductPage(data.id)}}>
                   <img
                     className="h-24 w-24 mx-auto"
                     src={`http://127.0.0.1:8000/${data.image}`}
@@ -112,7 +112,7 @@ const CategoryPage: React.FC<Props> = () => {
                   />
                 </div>
                 <div
-                  onClick={navigateProductPage}
+                  onClick={()=>{navigateProductPage(data.id)}}
                   className="space-y-1 px-2 cursor-pointer"
                 >
                   <h4 className="text-lg font-semibold">{data.name}</h4>

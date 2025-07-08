@@ -5,11 +5,13 @@ import GlobalSearch from "../Input/SearchBox";
 import ImageButton from "../Button/ImageBtn";
 import NotificationCard from "../Alert/NotificationCard";
 import { ModeToggle } from "../mode-toggle";
+import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
+  const navigate=useNavigate()
   // ✅ Track window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -93,7 +95,7 @@ function AppHeader() {
         <div className="flex items-center justify-between gap-5">
           {/* Logo */}
           <div className="flex-shrink-0 p-2">
-            <img src={logo} alt="LogicX Logo" className="w-25" />
+            <img src={logo} alt="LogicX Logo" className="w-25" onClick={()=>{navigate("/")}} />
           </div>
 
           {/* Right section */}

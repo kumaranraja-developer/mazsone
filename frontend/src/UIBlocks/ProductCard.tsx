@@ -48,18 +48,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, api }) => {
     navigate(`/productpage/${id}`);
   };
 
-  return (
-    <div>
-      {/* Header */}
-      <div className="flex justify-between items-center px-2">
-        <h1 className="ml-5 mt-2 font-bold text-[25px]">{title}</h1>
-        <p className="text-update text-lg mr-4 mt-2 cursor-pointer hover:underline">
-          More
-        </p>
-      </div>
+ return (
+  <div className="w-full">
+    {/* Header */}
+    <div className="flex justify-between items-center px-4">
+      <h1 className="mt-2 font-bold text-[25px]">{title}</h1>
+      <p className="text-update text-lg mt-2 cursor-pointer hover:underline">
+        More
+      </p>
+    </div>
 
-      {/* Product List */}
-      <div className="flex gap-4 overflow-x-auto px-2 my-4 scrollbar-hide">
+    {/* Product List (scrollable) */}
+    <div className="w-full overflow-x-auto scrollbar-hide mt-4 px-4">
+      <div className="flex gap-4 min-w-max">
         {products.map((product) => (
           <div
             key={product.id}
@@ -77,7 +78,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, api }) => {
         ))}
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default ProductCard;

@@ -37,7 +37,7 @@ function ProductPage() {
   if (!product || error) return <div className="text-center mt-10 text-red-500">{error}</div>;
 
   return (
-    <div className="px-4 py-10 max-w-6xl mx-auto">
+    <div className="px-4 py-10 mx-auto">
       <div className="grid md:grid-cols-2 gap-10 items-center">
         <div className="w-full flex justify-center">
           <img

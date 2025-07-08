@@ -9,12 +9,14 @@ import {
   X,
   Search,
   Filter,
-  LucideCheckCircle
+  LucideCheckCircle,
+  ShoppingCart,
+
 } from 'lucide-react'
 
 interface AnimateButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string
-  mode: 'edit' | 'delete' | 'view' | 'create' | 'close' | 'search' | 'dropdown-up' | 'dropdown-down' | 'filter' | 'confirm'
+  mode: 'edit' | 'delete' | 'view' | 'create' | 'close' | 'search' | 'dropdown-up' | 'dropdown-down' | 'filter' | 'confirm' | 'cart'
 }
 
 const iconMap = {
@@ -28,6 +30,7 @@ const iconMap = {
   'dropdown-down': ChevronDown,
   filter:Filter,
   confirm:LucideCheckCircle,
+  cart:ShoppingCart,
 }
 
 const AnimateButton: React.FC<AnimateButtonProps> = ({

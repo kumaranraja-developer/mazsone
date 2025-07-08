@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  Plus, Edit, Trash2, Eye, ChevronDown, ChevronUp, X, Search,
+  Plus,Minus, Edit, Trash2, Eye, ChevronDown, ChevronUp, X, Search,
   ArrowUpWideNarrow, ArrowDownWideNarrow, EllipsisVertical, Filter,
   PrinterIcon, LucideFileJson2, LucideColumnsSettings,ExpandIcon,
   ChevronRight, ChevronLeft,
@@ -20,6 +20,7 @@ type ButtonProps = {
 
 const iconMap: Record<string, React.ReactNode> = {
   plus: <Plus size={18} />,
+  minus: <Minus size={18} />,
   edit: <Edit size={18} />,
   delete: <Trash2 size={18} />,
   view: <Eye size={18} />,
