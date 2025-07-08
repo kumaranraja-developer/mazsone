@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { cropImageToSize } from "../External/cropImageToSize";
 
 interface FilePreview {
   file: File;
@@ -14,17 +15,22 @@ function FileUpload({ id, onChange }: FileUploadProps) {
   const [previews, setPreviews] = useState<FilePreview[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const selectedFile = files[0];
-    const newPreview: FilePreview = { file: selectedFile, progress: 0 };
+    const originalFile = files[0];
+    try {
+      const croppedCompressedFile = await cropImageToSize(originalFile, 200, 200, 0.6);
 
-    setPreviews([newPreview]);
-    simulateUpload([newPreview]);
+      const newPreview: FilePreview = { file: croppedCompressedFile, progress: 0 };
+      setPreviews([newPreview]);
+      simulateUpload([newPreview]);
 
-    onChange?.(selectedFile);
+      onChange?.(croppedCompressedFile);
+    } catch (err) {
+      console.error("Image crop/compression failed:", err);
+    }
   };
 
   const simulateUpload = (files: FilePreview[]) => {
