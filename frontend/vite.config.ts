@@ -13,6 +13,10 @@ export default defineConfig({
       open: true, // auto opens in browser
     }),
   ],
+  // server: {
+  //   host: '127.0.0.1',
+  // port: 5173,
+  // },
    resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -2,6 +2,8 @@ import CategoryList from "@/UIBlocks/CategoryList";
 import ProductCard from "@/UIBlocks/ProductCard";
 import vehicles from "../../assets/category/vehicles.png";
 import BannerCarousel from "@/UIBlocks/BannerCarousel";
+import GroupProductCard from "@/UIBlocks/GroupProductCard";
+import AdvertisementBanner from "@/UIBlocks/AdvertisementBanner";
 
 function Home() {
 
@@ -31,6 +33,11 @@ function Home() {
       <BannerCarousel slides={slides} delay={4000}/>
       <ProductCard title="Popular Items" api="/api/products"/>
       <ProductCard title="Recommended for You" api="/api/products"/>
+      <AdvertisementBanner />
+      <div className="flex flex-col md:flex-row gap-5 px-[5%]">
+        <GroupProductCard title={"Top Rated"} api={"/api/products"} />
+        <GroupProductCard title={"Discount for you"} api={"/api/products"} />
+      </div>
     </div>
   );
 }

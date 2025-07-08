@@ -4,8 +4,10 @@ import {
   ArrowUpWideNarrow, ArrowDownWideNarrow, EllipsisVertical, Filter,
   PrinterIcon, LucideFileJson2, LucideColumnsSettings,ExpandIcon,
   ChevronRight, ChevronLeft,
-  SortAsc,UserCircle2,LucideShoppingCart
+  SortAsc,UserCircle2,LucideShoppingCart,
 } from 'lucide-react';
+import { IoIosArrowUp } from "react-icons/io";
+import { IoChevronDown } from "react-icons/io5";
 import React from 'react';
 
 type ButtonProps = {
@@ -37,6 +39,8 @@ const iconMap: Record<string, React.ReactNode> = {
   column: <LucideColumnsSettings size={18} />,
   right: <ChevronRight size={18} />,
   left: <ChevronLeft size={18} />,
+  up: <IoIosArrowUp size={18} />,
+  down: <IoChevronDown  size={18} />,
   fullscreen: <ExpandIcon size={18} />,
    sort: <SortAsc size={18}/>,
    user: <UserCircle2 size={25}/>,

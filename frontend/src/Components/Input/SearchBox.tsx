@@ -1,42 +1,44 @@
-import { cn } from "../../lib/utils"
-import { useEffect, useState } from "react"
+import { cn } from "../../lib/utils";
+import { useEffect, useState } from "react";
 
 interface SearchItem {
-  name: string
-  image: string
-  category: string
+  name: string;
+  image: string;
+  category: string;
 }
 
 interface GlobalSearchProps {
-  className?: string // applies to the <input>
+  className?: string; // applies to the <input>
 }
 
 export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
-  const [query, setQuery] = useState("")
-  const [results, setResults] = useState<SearchItem[]>([])
-  const [filtered, setFiltered] = useState<SearchItem[]>([])
-  const [isOpen, setIsOpen] = useState(false)
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchItem[]>([]);
+  const [filtered, setFiltered] = useState<SearchItem[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetch("settings.json")
       .then((res) => res.json())
       .then((data: SearchItem[]) => setResults(data))
-      .catch(() => setResults([]))
-  }, [])
+      .catch(() => setResults([]));
+  }, []);
 
   useEffect(() => {
-    const trimmed = query.trim()
+    const trimmed = query.trim();
     if (trimmed) {
-      const match = results.filter(item =>
-        `${item.name} ${item.category}`.toLowerCase().includes(trimmed.toLowerCase())
-      )
-      setFiltered(match)
-      setIsOpen(true)
+      const match = results.filter((item) =>
+        `${item.name} ${item.category}`
+          .toLowerCase()
+          .includes(trimmed.toLowerCase())
+      );
+      setFiltered(match);
+      setIsOpen(true);
     } else {
-      setFiltered([])
-      setIsOpen(false)
+      setFiltered([]);
+      setIsOpen(false);
     }
-  }, [query, results])
+  }, [query, results]);
 
   return (
     <div className="relative w-full">
@@ -58,18 +60,17 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
 
         {/* Search Input with custom className */}
         <input
-            type="text"
-            placeholder="Search..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className={cn(
-                "py-2.5 ps-10 pe-4 block w-[100%] rounded-lg border border-gray-200 sm:text-sm",
-                "focus:ring-blue-500 focus:border focus:border-blue-500 dark:bg-neutral-900 dark:border-neutral-700",
-                "dark:text-neutral-200 dark:placeholder-neutral-500 dark:focus:ring-neutral-600",
-                className // 👈 for props.className
-            )}
-            />
-
+          type="text"
+          placeholder="Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className={cn(
+            "py-2.5 ps-10 pe-4 block w-full rounded-lg border border-ring/30 sm:text-sm",
+            "focus:ring-2 focus:ring-ring/30 focus:outline-none focus:border-transparent",
+            "transition duration-300",
+            className
+          )}
+        />
       </div>
 
       {/* Dropdown */}
@@ -80,13 +81,17 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
               <div
                 key={idx}
                 onClick={() => {
-                  setQuery(item.name)
-                  setIsOpen(false)
+                  setQuery(item.name);
+                  setIsOpen(false);
                 }}
                 className="flex items-center gap-3 px-4 py-2 text-sm cursor-pointer text-gray-800 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700"
               >
                 <div className="rounded-full bg-gray-200 size-6 overflow-hidden">
-                  <img src={item.image} alt={item.name} className="object-cover h-full w-full" />
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="object-cover h-full w-full"
+                  />
                 </div>
                 <div className="flex-1">{item.name}</div>
               </div>
@@ -95,5 +100,5 @@ export default function GlobalSearch({ className = "" }: GlobalSearchProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

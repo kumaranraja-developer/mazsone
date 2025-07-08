@@ -179,8 +179,8 @@
   --sidebar-ring: oklch(0.708 0 0);
   --checked: oklch(62.453% 0.17878 148.184);
 
-  --create: oklch(71.66% 0.20289 148.417);
-  --update: oklch(40.427% 0.26295 267.548);
+  --create: #00a63e;
+  --update: #155dfc;
   --delete: oklch(54.215% 0.21206 29.647);
   --warning: oklch(64.313% 0.15568 54.481);
   --create-foreground: oklch(100% 0.00011 271.152);
@@ -251,8 +251,8 @@
   --checked: oklch(62.453% 0.17878 148.184);
 
 
-  --create: oklch(71.66% 0.20289 148.417);
-  --update: oklch(40.427% 0.26295 267.548);
+  --create: #00a63e;
+  --update: #155dfc;
   --delete: oklch(54.215% 0.21206 29.647);
   --warning: oklch(64.782% 0.15506 55.081);
   --create-foreground: oklch(100% 0.00011 271.152);

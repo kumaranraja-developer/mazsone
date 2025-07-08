@@ -68,13 +68,13 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
   const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden bg-gray-100">
+    <div className="relative w-full h-[400px] overflow-hidden bg-background">
       {/* Slides */}
       <div className="w-full h-full relative">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`absolute inset-0 flex transition-opacity duration-700 px-6 py-4 ${
+            className={`absolute inset-0 flex transition-opacity border-y border-ring/30 duration-700 px-6 py-4 ${
               index === activeIndex ? "opacity-100 " : "opacity-0 z-0"
             }`}
           >
@@ -98,7 +98,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
               {/* Circular Timer */}
               <div className="absolute bottom-4 right-4">
-                <svg width="50" height="50">
+                <svg width="50" height="50" className="text-foreground">
                   <circle
                     cx="25"
                     cy="25"
@@ -125,7 +125,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
                     textAnchor="middle"
                     dominantBaseline="central"
                     fontSize="12"
-                    fill="#111827"
+                    fill="currentColor"
                     fontWeight="bold"
                   >
                     {Math.ceil(remainingTime)}s

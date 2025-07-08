@@ -108,7 +108,6 @@ function CommonForm({
     ) {
       return field.errMsg;
     }
-
     if (
       field.label.toLowerCase().includes("phone") &&
       !/^[6-9]\d{9}$/.test(value)
@@ -147,29 +146,28 @@ function CommonForm({
 
     const formDataToSend = new FormData();
     Object.entries(cleaned).forEach(([key, val]) => {
-  const isImageField = key === 'image' || key === 'images';
-  const fieldKey = isImageField ? 'images' : key;
+      const isImageField = key === "image" || key === "images";
+      const fieldKey = isImageField ? "images" : key;
 
-  if (Array.isArray(val)) {
-    val.forEach((item) => {
-      if (item instanceof File) {
-        formDataToSend.append(`${fieldKey}[]`, item); // ✅ appending each file
-      } else {
-        formDataToSend.append(`${fieldKey}[]`, item);
+      if (Array.isArray(val)) {
+        val.forEach((item) => {
+          if (item instanceof File) {
+            formDataToSend.append(`${fieldKey}[]`, item); // ✅ appending each file
+          } else {
+            formDataToSend.append(`${fieldKey}[]`, item);
+          }
+        });
+      } else if (val instanceof File) {
+        formDataToSend.append(`${fieldKey}[]`, val); // ✅ still appending, not setting
+      } else if (typeof val === "boolean") {
+        formDataToSend.append(fieldKey, val ? "1" : "0");
+      } else if (val !== undefined && val !== null && val !== "") {
+        formDataToSend.append(fieldKey, val);
       }
     });
-  } else if (val instanceof File) {
-    formDataToSend.append(`${fieldKey}[]`, val); // ✅ still appending, not setting
-  } else if (typeof val === 'boolean') {
-    formDataToSend.append(fieldKey, val ? '1' : '0');
-  } else if (val !== undefined && val !== null && val !== '') {
-    formDataToSend.append(fieldKey, val);
-  }
-});
-// for (let pair of formDataToSend.entries()) {
-//   console.log(pair[0], pair[1]);
-// }
-
+    // for (let pair of formDataToSend.entries()) {
+    //   console.log(pair[0], pair[1]);
+    // }
 
     method(endpoint, formDataToSend, {
       headers: {

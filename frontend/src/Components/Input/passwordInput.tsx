@@ -39,7 +39,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(({
           onKeyDown={onKeyDown} // ✅ handle Enter key from parent
           ref={ref} // ✅ forward ref
           className={`
-            peer block px-2.5 pb-2.5 pt-4 w-full text-sm rounded-lg border border-ring/40 appearance-none
+            peer block px-2.5 pb-2.5 pt-2 w-full text-sm rounded-lg border border-ring/40 appearance-none
             bg-background text-foreground/90 dark:bg-dark
             focus:outline-none focus:ring-2 focus:ring-ring/30
             placeholder-transparent

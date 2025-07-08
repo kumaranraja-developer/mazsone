@@ -131,17 +131,17 @@ export default function Cart() {
   );
 
   const renderItemCard = (item: Product, isSaved = false) => (
-    <div key={item.id} className="border-b pb-4 relative last:border-0">
-      <div className="grid grid-cols-3 items-center gap-4">
+    <div key={item.id} className="border-b border-ring/30 pb-4 relative last:border-0">
+      <div className="grid grid-cols-3 gap-8 px-5">
         <div onClick={() => navigateProductPage(item.id)} className="cursor-pointer">
-          <img src={item.image} alt={item.title} className="h-24 w-24 object-contain mx-auto" />
+          <img src={item.image} alt={item.title} className="object-contain mx-auto" />
         </div>
 
         <div onClick={() => navigateProductPage(item.id)} className="col-span-2 cursor-pointer">
           <h4 className="text-lg font-semibold">{item.title}</h4>
           <p className="text-sm text-gray-500">{item.category}</p>
           <p className="text-xs text-gray-400">Seller: <strong>{sellerName}</strong></p>
-          <h2 className="text-lg font-bold text-green-700">
+          <h2 className="text-xl mt-2 font-bold text-create">
             ${Number(item.price * item.quantity).toFixed(2)}
           </h2>
         </div>
@@ -176,13 +176,13 @@ export default function Cart() {
           {isSaved ? (
             <>
               <AnimateButton
-                className="bg-create"
+                className="bg-create/90"
                 onClick={() => dispatch({ category: 'moveToCart', payload: item.id })}
                 label="Move to cart"
                 mode="cart"
               />
               <AnimateButton
-                className="bg-delete"
+                className="bg-update"
                 onClick={() => dispatch({ category: 'removeSaved', payload: item.id })}
                 label="Remove"
                 mode="delete"
@@ -191,12 +191,12 @@ export default function Cart() {
           ) : (
             <>
               <Button
-                className="text-purple-600 cursor-pointer hover:border hover:border-ring"
+                className="text-create cursor-pointer hover:border hover:border-ring/30"
                 onClick={() => dispatch({ category: 'saveLater', payload: item.id })}
                 label="Save for Later"
               />
               <AnimateButton
-                className="bg-delete"
+                className="bg-update"
                 onClick={() => dispatch({ category: 'remove', payload: item.id })}
                 label="Remove"
                 mode="delete"
@@ -209,27 +209,28 @@ export default function Cart() {
   );
 
   return (
-    <div className="grid lg:grid-cols-[1fr_320px] lg:px-[10%] gap-10 p-5">
+    <div className="grid lg:grid-cols-[1fr_320px] my-10 lg:px-[10%] gap-10 p-5">
       {/* Left: Cart Items */}
       <div className="space-y-8 overflow-auto">
-        <div className="space-y-4">
+        
+        <div className="space-y-4 p-5 border border-ring/30 rounded-md">
           {state.cartItems.map(item => renderItemCard(item))}
         </div>
 
         {state.savedItems.length > 0 && (
-          <>
-            <h3 className="text-xl font-semibold mb-4">Saved for Later</h3>
+          <div className=' border border-ring/30 mt-20 rounded-md p-5'>
+            <h3 className="text-xl font-semibold mb-4 ">Saved for Later</h3>
             <div className="mt-4 space-y-4 border-b last:border-0 pt-4">
               {state.savedItems.map(item => renderItemCard(item, true))}
             </div>
-          </>
+          </div>
         )}
       </div>
 
       {/* Right: Sticky Price Summary */}
-      <div className="w-full max-w-sm mx-auto border p-5 space-y-4 lg:sticky top-20 self-start h-fit">
-        <h4 className="text-lg font-bold">Price Details</h4>
-        <hr />
+      <div className="w-full max-w-sm mx-auto shadow shadow-ring/40 p-5 space-y-4 lg:sticky top-20 self-start h-fit">
+        <h4 className="text-lg font-bold text-update">Price Details</h4>
+        <hr className='text-ring/30' />
         <div className="grid grid-cols-5">
           <p className="col-span-4">
             Price ({state.cartItems.reduce((acc, item) => acc + item.quantity, 0)} items)
@@ -244,12 +245,12 @@ export default function Cart() {
           <p className="col-span-4">Delivery Charges</p>
           <p className="text-right">Free</p>
         </div>
-        <hr />
+        <hr className='text-ring/30' />
         <div className="grid grid-cols-5 font-semibold">
           <p className="col-span-4">Total Amount</p>
           <p className="text-right">${totalPrice.toFixed(2)}</p>
         </div>
-        <button className="bg-orange-500 w-full py-2 text-white font-medium rounded hover:bg-orange-600 transition">
+        <button className="bg-update w-full py-2 text-white font-medium rounded hover:bg-orange-600 transition">
           Place Order
         </button>
       </div>

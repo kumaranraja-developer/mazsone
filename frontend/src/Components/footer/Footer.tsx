@@ -5,8 +5,8 @@ import { FaInstagram } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-neutral-900 text-white text-sm">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6 py-10">
+    <footer className="bg-neutral-900  text-white text-sm mt-5">
+      <div className="grid grid-cols-1 px-[5%] sm:grid-cols-2 md:grid-cols-4 gap-6 py-10">
         {/* About */}
         <div>
           <h5 className="font-bold mb-2">About</h5>
