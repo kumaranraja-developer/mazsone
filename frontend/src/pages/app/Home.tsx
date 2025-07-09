@@ -36,6 +36,7 @@ function Home() {
         <GroupProductCard title={"Discount for you"} api={"/api/products"} />
       </div>
       <AdvertisementBanner />
+ 
     </div>
   );
 }
