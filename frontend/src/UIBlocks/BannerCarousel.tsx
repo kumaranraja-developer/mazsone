@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 interface SlideContent {
   image: string;
   title?: string;
-  price?: string;
+  description?: string;
   discount?: string;
 }
 
@@ -68,7 +68,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
   const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden bg-background">
+    <div className="relative w-full h-[500px] overflow-hidden bg-background">
       {/* Slides */}
       <div className="w-full h-full relative">
         {slides.map((slide, index) => (
@@ -89,10 +89,10 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
 
             {/* Content */}
             <div className="w-1/2 h-full flex flex-col justify-center items-start p-4 relative">
-              <h2 className="text-2xl font-bold mb-2">{slide.title}</h2>
-              <p className="text-lg font-semibold text-green-600">{slide.price}</p>
-              <p className="text-sm text-red-500">{slide.discount}</p>
-              <button className="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+              <h2 className="text-4xl md:text-7xl font-bold mb-2">{slide.title}</h2>
+              <h2 className="text-xl text-foreground/40 mt-3 mb-2">{slide.description}</h2>
+              <p className="text-md md:text-2xl mt-3 text-red-500">{slide.discount}</p>
+              <button className="mt-4 px-7 py-2 bg-blue-600 text-white text-lg rounded hover:bg-blue-700 transition">
                 Shop Now
               </button>
 
