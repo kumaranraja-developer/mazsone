@@ -54,7 +54,7 @@ export default function VerticalImageList({
   return (
     <div
       className={`flex items-center ${
-        isVertical ? "flex-col w-24 space-y-2" : "flex-row w-full space-x-2"
+        isVertical ? "flex-col w-16 space-y-2" : "flex-row w-full space-x-2"
       }`}
     >
       {/* Scroll Button (Prev) */}

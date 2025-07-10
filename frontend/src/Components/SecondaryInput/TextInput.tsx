@@ -1,4 +1,3 @@
-import { Label } from "../label";
 import Error from "../Input/Error";
 import { MdErrorOutline } from "react-icons/md";
 import React, { forwardRef } from "react";

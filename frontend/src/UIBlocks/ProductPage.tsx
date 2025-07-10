@@ -5,6 +5,23 @@ import ProductCard from "./ProductCard";
 import VerticalImageList from "@/Slider/VerticalImageList";
 import Tooltipcomp from "@/Components/Tooltip/tooltipcomp";
 import RatingReviews from "./RatingReviews";
+import Settings from "../../public/settings.json";
+
+// Define types
+interface Field {
+  id: string;
+  key: string;
+  label: string;
+  type: string;
+  value: string;
+}
+
+interface Group {
+  id: string;
+  title: string;
+  fields?: Field[];
+  children?: Record<string, Group>;
+}
 
 interface Product {
   id: number;
@@ -13,7 +30,7 @@ interface Product {
   description: string;
   category: string;
   image: string;
-  images?: string[]; // Optional if you support multiple
+  images?: string[];
 }
 
 function ProductPage() {
@@ -28,31 +45,59 @@ function ProductPage() {
       title: "",
       content:
         "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
-      tooltip: {
-        message:
-          "ksfuhk bsfkghdkf ghs fkhdfgkhs fkg hfig fg ujgsidtih sdifgii igisg",
-      },
+      tooltip: { message: "T&C message..." },
     },
     {
       title: "Bank Offer",
       content:
         "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
-      tooltip: {
-        message:
-          "ksfuhk bsfkghdkf ghs fkhdfgkhs fkg hfig fg ujgsidtih sdifgii igisg",
-      },
+      tooltip: { message: "T&C message..." },
     },
     {
       title: "Bank Offer",
       content:
         "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
-      tooltip: {
-        message:
-          "ksfuhk bsfkghdkf ghs fkhdfgkhs fkg hfig fg ujgsidtih sdifgii igisg",
-      },
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
+    },
+    {
+      title: "Bank Offer",
+      content:
+        "5% cashback on Flipkart Axis Bank Credit Card upto ₹4,000 per statement quarter",
+      tooltip: { message: "T&C message..." },
     },
   ]);
-
+  const [showAllOffers, setShowAllOffers] = useState(false);
+  const visibleOffers = showAllOffers ? offer : offer.slice(0, 5);
   useEffect(() => {
     if (!id) return;
 
@@ -72,12 +117,10 @@ function ProductPage() {
           images: imageList,
         });
       })
-      .catch((err) => {
-        console.error(err);
-        setError("Product not found");
-      })
+      .catch(() => setError("Product not found"))
       .finally(() => setLoading(false));
   }, [id]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [id]);
@@ -87,12 +130,11 @@ function ProductPage() {
     return <div className="text-center mt-10 text-red-500">{error}</div>;
 
   return (
-    <div className="py-10 px-[5%] mx-auto">
-      <div className="grid lg:grid-cols-2 gap-5 xl:grid-cols-[35%_60%] items-start">
+    <div className="py-10 sm:px-[5%] mx-auto">
+      <div className="grid lg:grid-cols-2 gap-5 xl:grid-cols-[35%_65%] items-start">
+        {/* Image Section */}
         <div className="lg:sticky top-20 h-fit">
-          {/* --- Main image section --- */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start">
-            {/* Vertical Image List - only on lg and up */}
+          <div className="flex flex-col border border-ring/20 p-2 lg:flex-row gap-4 items-start">
             <div className="hidden lg:block">
               <VerticalImageList
                 images={product.images || []}
@@ -102,21 +144,18 @@ function ProductPage() {
                 onSelect={(index) => setSelectedImage(product.images![index])}
               />
             </div>
-
-            {/* Main Image + Button Group */}
-            <div className="block m-auto">
-              <div className="w-[320px] mx-auto">
+            {/* main image */}
+            <div className="block m-auto flex-1">
+              <div className="w-full h-full min-w-[310px] min-h-[310px] max-w-[400px] max-h-[400px] mx-auto">
                 <img
                   src={selectedImage}
                   alt={product.name}
-                  className="w-full h-[320px] object-contain rounded shadow-lg"
+                  className="w-full h-full object-contain rounded shadow-lg"
                 />
-             
               </div>
             </div>
 
-            {/* Horizontal Image List - only on small to md screens */}
-            <div className="lg:hidden mt-4 w-[320px] block mx-auto overflow-x-auto">
+            <div className="lg:hidden mt-4 w-[310px] block mx-auto overflow-x-auto">
               <VerticalImageList
                 images={product.images || []}
                 selectedIndex={(product.images || []).findIndex(
@@ -129,27 +168,30 @@ function ProductPage() {
           </div>
         </div>
 
-        {/* --- Product details section --- */}
-        <div className="space-y-4">
+        {/* Product Info */}
+        <div className="space-y-4 px-2">
           <h1 className="text-xl text-gray-800">{product.name}</h1>
           <div className="text-sm text-foreground/50">
-             <span className="bg-green-600 text-white text-xs w-max px-2 py-1 rounded">
-            4 ★
-          </span> <span>76876 rating</span> &{" "}
-            <span>7868 Reviews</span>
+            <span className="bg-green-600 text-white text-xs w-max px-2 py-1 rounded">
+              4 ★
+            </span>{" "}
+            <span>76876 rating</span> & <span>7868 Reviews</span>
           </div>
           <p className="text-2xl font-bold">
             ₹{product.price}{" "}
             <span className="line-through text-sm text-foreground/30">
-              675634
+              ₹675634
             </span>
             <span className="text-sm ml-2 text-create">6% offer</span>
           </p>
-          <p className="text-sm text-gray-500">Extra feee</p>
-          <p className="text-gray-700 text-lg font-semibold">Available Offer</p>
-          {offer.map((off, index) => (
+          <p className="text-sm text-gray-500">Extra fee</p>
+
+          <p className="text-foreground text-md font-semibold">
+            Available Offer
+          </p>
+          {visibleOffers.map((off, index) => (
             <div key={index}>
-              <span className="font-bold">{off.title}</span> {off.content}{" "}
+              <span className="font-semibold">{off.title}</span> {off.content}{" "}
               <Tooltipcomp
                 label={"T&C"}
                 tip={off.tooltip.message}
@@ -157,22 +199,112 @@ function ProductPage() {
               />
             </div>
           ))}
-             {/* Button Group aligned with image */}
-                <div className="flex justify-between mt-5 gap-4">
-                  <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    Add to Cart
-                  </button>
-                  <button className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                    BUY NOW
-                  </button>
-                </div>
+
+          {offer.length > 5 && (
+            <button
+              className="mt-2 text-sm text-blue-600 underline"
+              onClick={() => setShowAllOffers(!showAllOffers)}
+            >
+              {showAllOffers ? "Show Less" : "Show More"}
+            </button>
+          )}
+
+          <div className="flex justify-between mt-5 gap-4">
+            <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+              Add to Cart
+            </button>
+            <button className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+              BUY NOW
+            </button>
+          </div>
+          {/* Specifications */}
+          <div className="mt-10 border border-ring/30 rounded-md p-5">
+            <h2 className="text-3xl font-bold border-b border-ring/30 pb-3 text-gray-800 mb-4">
+              {Settings.product.specification_read.title}
+            </h2>
+
+            {Object.values(Settings.product.specification_read.groups).map(
+              (submenuRaw) => {
+                const submenu = submenuRaw as Group;
+
+                const hasFields =
+                  Array.isArray(submenu.fields) && submenu.fields.length > 0;
+                const hasChildren =
+                  submenu.children && Object.keys(submenu.children).length > 0;
+
+                if (!hasFields && !hasChildren) return null;
+
+                return (
+                  <div
+                    key={submenu.id}
+                    className="mb-6 border-b border-ring/30 pb-3 last:border-0"
+                  >
+                    <h3 className="text-lg text-foreground/50 font-bold">
+                      {submenu.title}
+                    </h3>
+
+                    {hasFields && (
+                      <div className="space-y-1 mt-2">
+                        {submenu.fields?.map((field) => (
+                          <div
+                            key={field.id}
+                            className="flex justify-between py-1 text-sm"
+                          >
+                            <span className="text-gray-600">{field.label}</span>
+                            <span className="font-medium text-gray-800">
+                              {field.value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {hasChildren &&
+                      Object.values(submenu.children!).map((childRaw) => {
+                        const child = childRaw as Group;
+
+                        if (
+                          !Array.isArray(child.fields) ||
+                          child.fields.length === 0
+                        )
+                          return null;
+
+                        return (
+                          <div key={child.id} className="ml-4 mt-3">
+                            <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                              {child.title}
+                            </h4>
+                            {child.fields.map((field) => (
+                              <div
+                                key={field.id}
+                                className="flex justify-between py-1 text-sm"
+                              >
+                                <span className="text-gray-600">
+                                  {field.label}
+                                </span>
+                                <span className="font-medium text-gray-800">
+                                  {field.value}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })}
+                  </div>
+                );
+              }
+            )}
+          </div>
+
+          {/* Buttons */}
+
           <div className="mt-10">
             <RatingReviews />
           </div>
         </div>
       </div>
 
-      {/* Similar Products Section */}
+      {/* Similar Products */}
       <div className="mt-12">
         <ProductCard title="Similar Products" api={"api/products"} />
       </div>

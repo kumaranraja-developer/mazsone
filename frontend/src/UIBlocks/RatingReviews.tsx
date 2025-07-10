@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import vehicle from "../assets/category/vehicles.png";
 import Carousel from "@/Components/Carousel";
+
 interface Review {
   rating: number;
   title: string;
@@ -14,21 +15,9 @@ interface Review {
   dislikes: number;
 }
 
-const dummyReview: Review = {
-  rating: 5,
-  title: "Just wow!",
-  text: "Good product at good price",
-  images: ["/bike1.jpg", "/bike2.jpg", "/bike3.jpg"],
-  user: "Aniket yadav",
-  location: "Allahabad",
-  timeAgo: "11 months ago",
-  likes: 105,
-  dislikes: 15,
-};
-
 const progressCircle = (value: number) => {
-  const radius = 20;
-  const stroke = 3;
+  const radius = 25;
+  const stroke = 5;
   const normalizedRadius = radius - stroke;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = circumference - (value / 5) * circumference;
@@ -57,9 +46,77 @@ export default function RatingReviews() {
     { label: "Brake", value: 4.0 },
   ]);
 
-  const [review] = useState<Review>(dummyReview);
+  const [reviews] = useState<Review[]>([
+    {
+      rating: 5,
+      title: "Just wow!",
+      text: "Good product at good price",
+      images: ["/bike1.jpg", "/bike2.jpg"],
+      user: "Aniket Yadav",
+      location: "Allahabad",
+      timeAgo: "11 months ago",
+      likes: 105,
+      dislikes: 15,
+    },
+    {
+      rating: 4,
+      title: "Nice Bike",
+      text: "Looks good and rides well",
+      images: ["/bike3.jpg"],
+      user: "Rahul Singh",
+      location: "Mumbai",
+      timeAgo: "6 months ago",
+      likes: 68,
+      dislikes: 9,
+    },
+    {
+      rating: 3,
+      title: "Average",
+      text: "Performance is okay, not great",
+      images: [],
+      user: "Priya Sharma",
+      location: "Delhi",
+      timeAgo: "2 months ago",
+      likes: 42,
+      dislikes: 17,
+    },
+     {
+      rating: 3,
+      title: "Average",
+      text: "Performance is okay, not great",
+      images: [],
+      user: "Priya Sharma",
+      location: "Delhi",
+      timeAgo: "2 months ago",
+      likes: 42,
+      dislikes: 17,
+    },
+     {
+      rating: 3,
+      title: "Average",
+      text: "Performance is okay, not great",
+      images: [],
+      user: "Priya Sharma",
+      location: "Delhi",
+      timeAgo: "2 months ago",
+      likes: 42,
+      dislikes: 17,
+    },
+    
+  ]);
+
   const [sliderVisible, setSliderVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  // Add this to your useState section
+  const [visibleCount, setVisibleCount] = useState(3);
+
+  const handleToggle = () => {
+    if (visibleCount >= reviews.length) {
+      setVisibleCount(3); // Show less
+    } else {
+      setVisibleCount((prev) => Math.min(prev + 10, reviews.length));
+    }
+  };
 
   return (
     <div className="bg-white p-6 rounded-md shadow-sm space-y-6">
@@ -102,7 +159,7 @@ export default function RatingReviews() {
         </button>
       </div>
 
-      {/* Feature Circles */}
+      {/* Feature Ratings */}
       <div className="flex flex-wrap gap-6">
         {featureRatings.map((feature, idx) => {
           const { strokeDashoffset, circumference, normalizedRadius, stroke } =
@@ -110,7 +167,6 @@ export default function RatingReviews() {
           return (
             <div key={idx} className="flex flex-col items-center">
               <svg height="50" width="50">
-                {/* Background circle */}
                 <circle
                   stroke="#e5e7eb"
                   fill="none"
@@ -119,7 +175,6 @@ export default function RatingReviews() {
                   cx="25"
                   cy="25"
                 />
-                {/* Progress circle */}
                 <circle
                   stroke="#16a34a"
                   fill="none"
@@ -131,7 +186,6 @@ export default function RatingReviews() {
                   strokeDashoffset={strokeDashoffset}
                   strokeLinecap="round"
                 />
-                {/* Value inside */}
                 <text
                   x="50%"
                   y="50%"
@@ -144,8 +198,6 @@ export default function RatingReviews() {
                   {feature.value.toFixed(1)}
                 </text>
               </svg>
-
-              {/* <span className="text-sm font-semibold mt-1">{feature.value.toFixed(1)}</span> */}
               <span className="text-xs text-gray-600 text-center">
                 {feature.label}
               </span>
@@ -154,7 +206,7 @@ export default function RatingReviews() {
         })}
       </div>
 
-      {/* Image Gallery Preview */}
+      {/* Gallery Preview */}
       <div className="flex gap-3 overflow-x-auto pb-1">
         {Array.from({ length: 20 }).map((_, i) => (
           <img
@@ -192,38 +244,57 @@ export default function RatingReviews() {
         )}
       </div>
 
-      {/* Single Review */}
-      <div className="border-t border-ring/30 pt-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="bg-green-600 text-white text-xs px-2 py-1 rounded">
-            {review.rating}★
+      {/* Multiple Reviews */}
+      {/* Multiple Reviews with Show More / Less */}
+      <div className="border-t border-ring/30 pt-4 space-y-6">
+        {reviews.slice(0, visibleCount).map((review, index) => (
+          <div key={index} className="space-y-3 border-b border-ring/30 pb-4 last:border-none">
+            <div className="flex items-center gap-2">
+              <div className="bg-green-600 text-white text-xs px-2 py-1 rounded">
+                {review.rating}★
+              </div>
+              <span className="font-semibold">{review.title}</span>
+            </div>
+            <p className="text-sm text-gray-700">{review.text}</p>
+            {review.images.length > 0 && (
+              <div className="flex gap-2">
+                {review.images.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    className="h-16 w-16 object-cover rounded"
+                    alt={`review-${index}-${idx}`}
+                  />
+                ))}
+              </div>
+            )}
+            <div className="text-sm text-gray-500">
+              <span className="font-semibold">{review.user}</span>{" "}
+              <span>• Certified Buyer, {review.location}</span>{" "}
+              <span>• {review.timeAgo}</span>
+            </div>
+            <div className="flex gap-4 text-gray-500 text-sm">
+              <div className="flex items-center gap-1">
+                <FaThumbsUp className="text-gray-600" /> {review.likes}
+              </div>
+              <div className="flex items-center gap-1">
+                <FaThumbsDown className="text-gray-600" /> {review.dislikes}
+              </div>
+            </div>
           </div>
-          <span className="font-semibold">{review.title}</span>
-        </div>
-        <p className="text-sm text-gray-700">{review.text}</p>
-        <div className="flex gap-2">
-          {review.images.map((img, idx) => (
-            <img
-              key={idx}
-              src={img}
-              className="h-16 w-16 object-cover rounded"
-              alt={`review ${idx}`}
-            />
-          ))}
-        </div>
-        <div className="text-sm text-gray-500">
-          <span className="font-semibold">{review.user}</span>{" "}
-          <span>• Certified Buyer, {review.location}</span>{" "}
-          <span>• {review.timeAgo}</span>
-        </div>
-        <div className="flex gap-4 text-gray-500 text-sm">
-          <div className="flex items-center gap-1">
-            <FaThumbsUp className="text-gray-600" /> {review.likes}
+        ))}
+
+        {/* Show More / Show Less button */}
+        {reviews.length > 3 && (
+          <div className="text-center mt-4">
+            <button
+              onClick={handleToggle}
+              className="text-blue-600 font-medium hover:underline"
+            >
+              {visibleCount >= reviews.length ? "Show Less" : "Show More"}
+            </button>
           </div>
-          <div className="flex items-center gap-1">
-            <FaThumbsDown className="text-gray-600" /> {review.dislikes}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
