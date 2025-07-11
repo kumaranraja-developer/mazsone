@@ -13,18 +13,39 @@ function AppHeader() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
+
   const loginRef = useRef<HTMLDivElement>(null!);
+  const showTimer = useRef<NodeJS.Timeout | null>(null);
+  const hideTimer = useRef<NodeJS.Timeout | null>(null);
 
   const navigate = useNavigate();
-
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const showLabel = windowWidth > 600;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      // Clear timers on unmount
+      if (showTimer.current) clearTimeout(showTimer.current);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
   }, []);
+
+  const handleLoginMouseEnter = () => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    showTimer.current = setTimeout(() => {
+      setShowLoginDropdown(true);
+    }, 200); // Delay before showing
+  };
+
+  const handleLoginMouseLeave = () => {
+    if (showTimer.current) clearTimeout(showTimer.current);
+    hideTimer.current = setTimeout(() => {
+      setShowLoginDropdown(false);
+    }, 300); // Delay before hiding
+  };
 
   const NotificationData = [
     {
@@ -48,30 +69,30 @@ function AppHeader() {
   ];
 
   const menu = [
-     {
+    {
       label: "My Profile",
-      path: "/",
-      icon:"user"
+      path: "/profile",
+      icon: "user",
     },
     {
       label: "Register",
       path: "/signup",
-      icon:"register"
+      icon: "register",
     },
     {
       label: "My Orders",
-      path: "/",
-      icon:"plus"
+      path: "/orders",
+      icon: "plus",
     },
-     {
+    {
       label: "Wishlist",
-      path: "/",
-      icon:"like"
+      path: "/wishlist",
+      icon: "like",
     },
     {
       label: "Logout",
-      path: "/",
-      icon:"logout"
+      path: "/logout",
+      icon: "logout",
     },
   ];
 
@@ -142,12 +163,12 @@ function AppHeader() {
               {showLabel && "Cart"}
             </div>
 
-            {/* Login with Hover Dropdown */}
+            {/* Login with Dropdown */}
             <div
               className="relative flex items-center gap-2 text-md text-foreground/80 cursor-pointer"
               ref={loginRef}
-              onMouseEnter={() => setShowLoginDropdown(true)}
-              onMouseLeave={() => setShowLoginDropdown(false)}
+              onMouseEnter={handleLoginMouseEnter}
+              onMouseLeave={handleLoginMouseLeave}
             >
               <UserCircle2 size={25} />
               {showLabel && "Login"}
@@ -156,13 +177,15 @@ function AppHeader() {
                 anchorRef={loginRef}
                 visible={showLoginDropdown}
                 content={
-                  <div className="w-[220px] flex flex-col rounded-md bg-background shadow-xl ring-1 ring-ring/30 p-4 space-y-2 text-sm duration-500">
+                  <div className="w-[220px] flex flex-col rounded-md bg-background shadow-xl ring-1 ring-ring/30 p-4 space-y-2 text-sm transform duration-500">
                     {menu.map((item, idx) => (
                       <ImageButton
                         key={idx}
                         className="hover:bg-accent p-2 rounded cursor-pointer"
-                       
-                        onClick={() => navigate(item.path)} icon={item.icon}    label={item.label}                />
+                        icon={item.icon}
+                        label={item.label}
+                        onClick={() => navigate(item.path)}
+                      />
                     ))}
                   </div>
                 }

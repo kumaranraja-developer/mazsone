@@ -9,7 +9,6 @@ import travel from "../assets/category/travels.png";
 import toys from "../assets/category/toys.png";
 import vehicles from "../assets/category/vehicles.png";
 import InvisibleSection from "./InvisibleSection";
-import ImageButton from "@/Components/Button/ImageBtn";
 import laptop from "../assets/products/laptop.webp";
 
 interface CategoryItem {
@@ -188,7 +187,6 @@ const CategoryList: React.FC = () => {
       <div className="flex gap-5 sm:gap-15 md:gap-10 m-5 lg:mx-20 bg-background overflow-x-auto justify-between scrollbar-hide px-1">
         {Categories.map((category, index) => {
           const hasSubMenu = !!category.subMenu;
-          const isActive = hoveredIndex === index;
 
           return (
             <div
@@ -208,12 +206,7 @@ const CategoryList: React.FC = () => {
               />
               <p className="text-sm font-medium flex mt-1 items-center justify-center gap-1">
                 {category.name}
-                {hasSubMenu && (
-                  <ImageButton
-                    className="text-xs transform duration-300"
-                    icon={isActive ? "up" : "down"}
-                  />
-                )}
+               
               </p>
 
               {hasSubMenu && anchorRefs.current[index] && (
