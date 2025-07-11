@@ -65,6 +65,17 @@ function AppHeader() {
         name: "James Collins",
         avatar: "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
       },
+      
+    },
+    {
+      date: "2023-09-01",
+      title: 'Created "Preline in React" task',
+      description: "Find more detailed instructions here.",
+      user: {
+        name: "James Collins",
+        avatar: "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
+      },
+      
     },
   ];
 
@@ -177,7 +188,7 @@ function AppHeader() {
                 anchorRef={loginRef}
                 visible={showLoginDropdown}
                 content={
-                  <div className="w-[220px] flex flex-col rounded-md bg-background shadow-xl ring-1 ring-ring/30 p-4 space-y-2 text-sm transform duration-500">
+                  <div className="w-[220px] flex flex-col rounded-md bg-background shadow-xl ring-1 ring-ring/30 p-2 space-y-1 text-sm transform duration-500">
                     {menu.map((item, idx) => (
                       <ImageButton
                         key={idx}
