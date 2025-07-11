@@ -4,7 +4,6 @@ import apiClient from "@/pages/app/api/apiClients";
 import ImageButton from "@/Components/Button/ImageBtn";
 import RangeSlider from "@/Components/Input/RangeSlider";
 import DropdownRead from "@/Components/Input/Dropdown-read";
-import MultiCheckbox from "@/Components/Input/MultiCheckbox";
 import Checkbox from "@/Components/Input/checkbox";
 
 type ProductType = {
@@ -396,3 +395,66 @@ export default CategoryPage;
 // };
 
 // export default CategoryPage;
+
+
+
+
+// vertical filter
+
+// <div className="flex flex-col md:w-72 w-full">
+//   <div className="sticky top-24 ring ring-gray-300/30 bg-background h-[calc(100vh-6rem)] overflow-y-auto p-4 md:p-6 rounded-md shadow-sm">
+//     <h6 className="font-semibold mb-4 hidden md:block text-lg">Filters</h6>
+
+//     {/* Dropdown Filters */}
+//     <div className="flex flex-wrap md:flex-col gap-4 md:gap-3 mb-4">
+//       {dropdowns.map((dropdown) => (
+//         <DropdownRead
+//           key={dropdown.id}
+//           id={`${dropdown.id}`}
+//           items={dropdown.options}
+//           label={dropdown.label}
+//           err=""
+//           placeholder=""
+//         />
+//       ))}
+//     </div>
+
+//     {/* Price Slider */}
+//     <div className="flex flex-col gap-2 mb-4 w-full">
+//       <label className="text-md font-semibold hidden md:block">Price</label>
+//       <RangeSlider
+//         label=""
+//         min={7999}
+//         max={50000}
+//         defaultValue={9500}
+//         // onChange={(val) => console.log("Selected value:", val)}
+//       />
+//     </div>
+
+//     {/* Invoice */}
+//     <div className="flex flex-col gap-2 mb-4">
+//       <label className="text-md font-semibold hidden md:block">Invoice</label>
+//       <Checkbox
+//         id="invoice"
+//         agreed={invoice}
+//         label="GST Invoice"
+//         err=""
+//         className=""
+//         onChange={() => setInvoice(!invoice)}
+//       />
+//     </div>
+
+//     {/* Availability */}
+//     <div className="flex flex-col gap-2">
+//       <label className="text-md font-semibold hidden md:block">Availability</label>
+//       <Checkbox
+//         id="stock"
+//         agreed={availability}
+//         label="Include Out of Stock"
+//         err=""
+//         className=""
+//         onChange={() => setAvailability(!availability)}
+//       />
+//     </div>
+//   </div>
+// </div>
