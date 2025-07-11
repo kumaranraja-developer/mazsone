@@ -4,7 +4,7 @@ import {
   ArrowUpWideNarrow, ArrowDownWideNarrow, EllipsisVertical, Filter,
   PrinterIcon, LucideFileJson2, LucideColumnsSettings,ExpandIcon,
   ChevronRight, ChevronLeft,
-  SortAsc,UserCircle2,LucideShoppingCart,Heart
+  SortAsc,UserCircle2,LucideShoppingCart,Heart,LogIn,LogOut,UserPlus2Icon
 } from 'lucide-react';
 import { IoIosArrowUp } from "react-icons/io";
 import { IoChevronDown } from "react-icons/io5";
@@ -47,6 +47,9 @@ const iconMap: Record<string, React.ReactNode> = {
    cart: <LucideShoppingCart size={18}/>,
    link: <FiLink  size={18}/>,
    like: <Heart  size={18}/>,
+   login: <LogIn  size={18}/>,
+   logout: <LogOut  size={18}/>,
+   register: <UserPlus2Icon  size={18}/>,
   
 };
 

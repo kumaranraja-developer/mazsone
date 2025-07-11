@@ -1,28 +1,30 @@
-import { useEffect, useState } from "react";
-import NotificationButton from "../Alert/NotificationButton";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LucideShoppingCart, UserCircle2 } from "lucide-react";
 import logo from "../../assets/svg/logo.svg";
 import GlobalSearch from "../Input/SearchBox";
 import ImageButton from "../Button/ImageBtn";
+import NotificationButton from "../Alert/NotificationButton";
 import NotificationCard from "../Alert/NotificationCard";
 import { ModeToggle } from "../mode-toggle";
-import { useNavigate } from "react-router-dom";
-import { LucideShoppingCart, UserCircle2 } from "lucide-react";
+import InvisibleSection from "@/UIBlocks/InvisibleSection";
 
 function AppHeader() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [showLoginDropdown, setShowLoginDropdown] = useState(false);
+  const loginRef = useRef<HTMLDivElement>(null!);
 
   const navigate = useNavigate();
-  // ✅ Track window width
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const showLabel = windowWidth > 600;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const showLabel = windowWidth > 600;
 
   const NotificationData = [
     {
@@ -31,8 +33,7 @@ function AppHeader() {
       description: "Find more detailed instructions here.",
       user: {
         name: "James Collins",
-        avatar:
-          "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
+        avatar: "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
       },
     },
     {
@@ -41,45 +42,36 @@ function AppHeader() {
       description: "Find more detailed instructions here.",
       user: {
         name: "James Collins",
-        avatar:
-          "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
+        avatar: "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?...",
       },
     },
-    {
-      date: "2023-08-01",
-      title: 'Created "Preline in React" task',
-      description: "Find more detailed instructions here.",
-      user: {
-        name: "James Collins",
-        initial: "J",
-      },
+  ];
+
+  const menu = [
+     {
+      label: "My Profile",
+      path: "/",
+      icon:"user"
     },
     {
-      date: "2023-05-01",
-      title: 'Created "Preline in React" task',
-      description: "Find more detailed instructions here.",
-      user: {
-        name: "James Collins",
-        initial: "J",
-      },
+      label: "Register",
+      path: "/signup",
+      icon:"register"
     },
     {
-      date: "2023-06-01",
-      title: 'Created "Preline in React" task',
-      description: "Find more detailed instructions here.",
-      user: {
-        name: "James Collins",
-        initial: "J",
-      },
+      label: "My Orders",
+      path: "/",
+      icon:"plus"
+    },
+     {
+      label: "Wishlist",
+      path: "/",
+      icon:"like"
     },
     {
-      date: "2023-07-01",
-      title: 'Created "Preline in React" task',
-      description: "Find more detailed instructions here.",
-      user: {
-        name: "James Collins",
-        initial: "J",
-      },
+      label: "Logout",
+      path: "/",
+      icon:"logout"
     },
   ];
 
@@ -102,18 +94,18 @@ function AppHeader() {
               src={logo}
               alt="Mazsone Logo"
               className="w-10 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-              }}
+              onClick={() => navigate("/")}
             />
           </div>
 
-          {/* Right section */}
-          <div className="flex items-center gap-3 flex-1 justify-end  lg:gap-5 p-2">
+          {/* Right Section */}
+          <div className="flex items-center gap-3 flex-1 justify-end lg:gap-5 p-2">
+            {/* Desktop Search */}
             <div className="hidden sm:block">
               <GlobalSearch className="flex-1 md:min-w-[300px] lg:min-w-[500px]" />
             </div>
 
+            {/* Mobile Search */}
             <div className="flex sm:hidden items-center gap-2">
               <ImageButton
                 icon="search"
@@ -122,6 +114,7 @@ function AppHeader() {
               />
             </div>
 
+            {/* Notification */}
             <div className="relative">
               <NotificationButton
                 mode="icon"
@@ -140,18 +133,43 @@ function AppHeader() {
               )}
             </div>
 
-           
-            <div className="flex items-center gap-2 text-md text-foreground/80" onClick={()=>{navigate("/cart")}}>
-              <LucideShoppingCart size={25} /> {showLabel ? "Cart" : ""}
+            {/* Cart */}
+            <div
+              className="flex items-center gap-2 text-md text-foreground/80 cursor-pointer"
+              onClick={() => navigate("/cart")}
+            >
+              <LucideShoppingCart size={25} />
+              {showLabel && "Cart"}
             </div>
-             <div className="flex items-center gap-2 text-md text-foreground/80" onClick={()=>{navigate("/login")}}>
-              <UserCircle2 size={25} /> {showLabel ? "Login" : ""}
-            </div>
-            {/* ✅ Conditional Label */}
-            {/* <ImageButton icon="user" label={showLabel ? "Login" : ""} path={'/login'} />
-            <ImageButton icon="cart" label={showLabel ? "Cart" : ""} path="/cart"/> */}
 
-            {/* Dark mode toggle hidden for now */}
+            {/* Login with Hover Dropdown */}
+            <div
+              className="relative flex items-center gap-2 text-md text-foreground/80 cursor-pointer"
+              ref={loginRef}
+              onMouseEnter={() => setShowLoginDropdown(true)}
+              onMouseLeave={() => setShowLoginDropdown(false)}
+            >
+              <UserCircle2 size={25} />
+              {showLabel && "Login"}
+
+              <InvisibleSection
+                anchorRef={loginRef}
+                visible={showLoginDropdown}
+                content={
+                  <div className="w-[220px] flex flex-col rounded-md bg-background shadow-xl ring-1 ring-ring/30 p-4 space-y-2 text-sm duration-500">
+                    {menu.map((item, idx) => (
+                      <ImageButton
+                        key={idx}
+                        className="hover:bg-accent p-2 rounded cursor-pointer"
+                       
+                        onClick={() => navigate(item.path)} icon={item.icon}    label={item.label}                />
+                    ))}
+                  </div>
+                }
+              />
+            </div>
+
+            {/* Dark Mode Toggle */}
             <div className="hidden sm:block">
               <ModeToggle />
             </div>
