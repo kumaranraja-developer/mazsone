@@ -4,6 +4,7 @@ import vehicles from "../../assets/category/vehicles.png";
 import BannerCarousel from "@/UIBlocks/BannerCarousel";
 import GroupProductCard from "@/UIBlocks/GroupProductCard";
 import AdvertisementBanner from "@/UIBlocks/AdvertisementBanner";
+import PromotionBanner1 from "@/UIBlocks/Promotion/PromotionBanner1";
 
 function Home() {
   const slides = [
@@ -36,7 +37,6 @@ function Home() {
         <GroupProductCard title={"Discount for you"} api={"/api/products"} />
       </div>
       <AdvertisementBanner />
- 
     </div>
   );
 }

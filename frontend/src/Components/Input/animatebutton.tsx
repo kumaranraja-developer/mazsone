@@ -109,7 +109,7 @@ const AnimateButton: React.FC<AnimateButtonProps> = ({
         dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
         flex items-center group cursor-pointer ${className}`}
       >
-        <span className="relative z-10 block transition-transform duration-500 ease-in-out group-hover:translate-x-7 group-hover:opacity-0">
+        <span className="relative block transition-transform duration-500 ease-in-out group-hover:translate-x-7 group-hover:opacity-0">
           {label}
         </span>
 

@@ -100,8 +100,8 @@ function AppHeader() {
           <div className="flex-shrink-0 p-2">
             <img
               src={logo}
-              alt="LogicX Logo"
-              className="w-25 cursor-pointer"
+              alt="Mazsone Logo"
+              className="w-10 cursor-pointer"
               onClick={() => {
                 navigate("/");
               }}

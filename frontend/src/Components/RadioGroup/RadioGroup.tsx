@@ -35,11 +35,13 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
         return (
           <label
             key={option.value}
-            className={`flex items-start gap-3 cursor-pointer border rounded-md p-3 transition-all ${
-              isSelected
-                ? "bg-background border-blue-500 text-foreground"
-                : "bg-background border-gray-300 text-foreground"
-            } hover:bg-ring/30`}
+            className={`flex items-start gap-3 cursor-pointer border rounded-md p-3 transition-all
+              ${
+                isSelected
+                  ? "border-update/80 bg-background text-foreground"
+                  : "border-ring/30 bg-background text-foreground"
+              }
+              hover:bg-ring/30`}
           >
             <input
               type="radio"
@@ -47,7 +49,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
               value={option.value}
               checked={isSelected}
               onChange={handleChange}
-              className="mt-1 w-4 h-4 accent-blue-600"
+              className="mt-1 w-4 h-4 accent-update"
             />
             <div className="flex flex-col">
               <span className="font-medium text-foreground">{option.label}</span>

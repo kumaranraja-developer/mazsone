@@ -5,7 +5,7 @@ interface MultiCheckboxProps {
   options: string[];
   className: string;
   value: string[]; // selected options
-  err: string;
+  err?: string;
   label: string;
   onChange: (selectedValues: string[]) => void;
 }

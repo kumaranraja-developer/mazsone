@@ -10,18 +10,24 @@ import toys from "../assets/category/toys.png";
 import vehicles from "../assets/category/vehicles.png";
 import InvisibleSection from "./InvisibleSection";
 import ImageButton from "@/Components/Button/ImageBtn";
+import laptop from "../assets/products/laptop.webp";
 
 interface CategoryItem {
   name: string;
   image: string;
   alt: string;
   subMenu?: SubMenuItems[];
+  card: CardItems;
 }
 interface SubMenuItems {
   title: string;
   path: string;
 }
-
+interface CardItems {
+  title: string;
+  description: string;
+  image: string;
+}
 const Categories: CategoryItem[] = [
   {
     name: "Grocery",
@@ -33,6 +39,12 @@ const Categories: CategoryItem[] = [
       { title: "Dairy & Bakery", path: "/" },
       { title: "Staples", path: "/" },
     ],
+    card: {
+      title: "Daily Essentials",
+      description:
+        "Shop fresh produce, snacks, and pantry staples delivered to your door.",
+      image: laptop,
+    },
   },
   {
     name: "Mobiles",
@@ -43,6 +55,12 @@ const Categories: CategoryItem[] = [
       { title: "Accessories", path: "/" },
       { title: "Tablets", path: "/" },
     ],
+    card: {
+      title: "Latest Smartphones",
+      description:
+        "Discover top mobile brands, new releases, and must-have accessories.",
+      image: laptop,
+    },
   },
   {
     name: "Fashion",
@@ -54,6 +72,12 @@ const Categories: CategoryItem[] = [
       { title: "Footwear", path: "/" },
       { title: "Watches & Accessories", path: "/" },
     ],
+    card: {
+      title: "Trendy Fashion",
+      description:
+        "Upgrade your wardrobe with the latest fashion trends for all seasons.",
+      image: laptop,
+    },
   },
   {
     name: "Electronics",
@@ -65,6 +89,12 @@ const Categories: CategoryItem[] = [
       { title: "Home Appliances", path: "/" },
       { title: "Audio Devices", path: "/" },
     ],
+    card: {
+      title: "Smart Electronics",
+      description:
+        "Find gadgets, smart devices, and home electronics at great prices.",
+      image: laptop,
+    },
   },
   {
     name: "Furnitures",
@@ -76,6 +106,11 @@ const Categories: CategoryItem[] = [
       { title: "Office Furniture", path: "/" },
       { title: "Storage", path: "/" },
     ],
+    card: {
+      title: "Stylish Furniture",
+      description: "Explore comfortable and elegant furniture for every room.",
+      image: laptop,
+    },
   },
   {
     name: "Travel",
@@ -86,6 +121,11 @@ const Categories: CategoryItem[] = [
       { title: "Train Tickets", path: "/" },
       { title: "Hotel Deals", path: "/" },
     ],
+    card: {
+      title: "Plan Your Journey",
+      description: "Book flights, trains, and hotel stays at the best rates.",
+      image: laptop,
+    },
   },
   {
     name: "Toys",
@@ -96,6 +136,11 @@ const Categories: CategoryItem[] = [
       { title: "Outdoor Play", path: "/" },
       { title: "Soft Toys", path: "/" },
     ],
+    card: {
+      title: "Fun & Learning",
+      description: "Choose from a wide range of toys that make learning fun.",
+      image: laptop,
+    },
   },
   {
     name: "Vehicles",
@@ -106,9 +151,13 @@ const Categories: CategoryItem[] = [
       { title: "Two Wheelers", path: "/" },
       { title: "Accessories", path: "/" },
     ],
+    card: {
+      title: "Ride in Style",
+      description: "Browse two-wheelers, cycles, and essential accessories.",
+      image: laptop,
+    },
   },
 ];
-
 
 const CategoryList: React.FC = () => {
   const navigate = useNavigate();
@@ -160,7 +209,10 @@ const CategoryList: React.FC = () => {
               <p className="text-sm font-medium flex mt-1 items-center justify-center gap-1">
                 {category.name}
                 {hasSubMenu && (
-                  <ImageButton className="text-xs transform duration-300" icon={isActive ? "up" : "down"}/>
+                  <ImageButton
+                    className="text-xs transform duration-300"
+                    icon={isActive ? "up" : "down"}
+                  />
                 )}
               </p>
 
@@ -170,20 +222,40 @@ const CategoryList: React.FC = () => {
                     current: anchorRefs.current[index] as HTMLDivElement,
                   }}
                   content={
-                    <ul className="min-w-[180px]">
-                      {category.subMenu!.map((item, i) => (
-                        <li
-                          key={i}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(item.path);
-                          }}
-                          className="cursor-pointer px-3 py-2 hover:bg-accent hover:text-accent-foreground rounded text-sm text-gray-700"
-                        >
-                          {item.title}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="flex w-[500px] ">
+                      {/* Left menu list */}
+                      <ul className="min-w-[180px] py-2 overflow-y-auto">
+                        {category.subMenu!.map((item, i) => (
+                          <li
+                            key={i}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(item.path);
+                            }}
+                            className="cursor-pointer px-3 py-2 hover:bg-accent hover:text-accent-foreground rounded text-sm text-gray-700"
+                          >
+                            {item.title}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Right card details */}
+                      <div className="flex flex-col justify-between w-max gap-3 px-3 py-2 h-full">
+                        <div>
+                          <h3 className="text-lg font-semibold">
+                            {category.card.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {category.card.description}
+                          </p>
+                        </div>
+                        <img
+                          src={category.card.image}
+                          alt={category.card.title}
+                          className=" object-cover rounded"
+                        />
+                      </div>
+                    </div>
                   }
                   visible={hoveredIndex === index}
                 />

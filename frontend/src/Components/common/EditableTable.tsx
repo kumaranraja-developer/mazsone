@@ -9,7 +9,6 @@ import PasswordInput from "../SecondaryInput/PasswordInput";
 import AnimateButton from "../Input/animatebutton";
 import ImageButton from "../Button/ImageBtn";
 import DropdownRead from "../SecondaryInput/DropdownRead";
-import FloatingInput from "../Input/FloatingInput";
 import FileUpload from "../Input/FileInput"; // ✅ Ensure this path is correct
 import { TextInput } from "../SecondaryInput/TextInput";
 
@@ -227,27 +226,27 @@ function EditableTable({
       case "switch":
         return (
           <Switch
-          id={""} onChange={function (checked: boolean): void {
+          id={""} onChange={function (): void {
             throw new Error("Function not implemented.");
           } } {...commonProps}
           agreed={!!value}
           label={!!value ? "Active" : "Inactive"}          />
         );
       case "checkbox":
-        return <Checkbox id={""} err={""} onChange={function (checked: boolean): void {
+        return <Checkbox id={""} err={""} onChange={function (): void {
           throw new Error("Function not implemented.");
         } } {...commonProps} agreed={!!value} label={field.label} />;
       case "multicheckbox":
         return (
           <MultiCheckbox
-          id={""} value={[]} err={""} onChange={function (selectedValues: string[]): void {
+          id={""} value={[]} err={""} onChange={function (): void {
             throw new Error("Function not implemented.");
           } } {...commonProps}
           label={field.label}
           options={field.options || []}          />
         );
       case "password":
-        return <PasswordInput value={""} onChange={function (e: React.ChangeEvent<HTMLInputElement>): void {
+        return <PasswordInput value={""} onChange={function (): void {
           throw new Error("Function not implemented.");
         } } {...commonProps} label={field.label} />;
       case "date":

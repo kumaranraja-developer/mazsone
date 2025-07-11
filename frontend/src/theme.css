@@ -182,7 +182,7 @@
 
   --create: #00a63e;
   --update: #155dfc;
-  --delete: oklch(54.215% 0.21206 29.647);
+  --delete: #ff1930;
   --warning: oklch(64.313% 0.15568 54.481);
   --create-foreground: oklch(100% 0.00011 271.152);
   --update-foreground: oklch(100% 0.00011 271.152);
@@ -254,8 +254,8 @@
 
   --create: #00a63e;
   --update: #155dfc;
-  --delete: oklch(54.215% 0.21206 29.647);
-  --warning: oklch(64.782% 0.15506 55.081);
+  --delete: #ff1930;
+  --warning: oklch(13.198% 0.00835 61.178);
   --create-foreground: oklch(100% 0.00011 271.152);
   --update-foreground: oklch(100% 0.00011 271.152);
   --delete-foreground: oklch(100% 0.00011 271.152);

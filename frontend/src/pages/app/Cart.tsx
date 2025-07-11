@@ -1,9 +1,14 @@
-import { useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import vehicles from "../../assets/category/vehicles.png";
-import AnimateButton from '@/Components/Input/animatebutton';
-import ImageButton from '@/Components/Button/ImageBtn';
-import Button from '@/Components/Input/Button';
+import AnimateButton from "@/Components/Input/animatebutton";
+import ImageButton from "@/Components/Button/ImageBtn";
+import Button from "@/Components/Input/Button";
+import Stepper from "@/UIBlocks/Stepper";
+import OrderSummary from "@/UIBlocks/OrderSummary";
+import AddressSection from "@/UIBlocks/AddressSection";
+import OrderPayment from "@/UIBlocks/OrderPayment";
+import OrderSuccess from "@/UIBlocks/OrderSuccess";
 
 interface Product {
   id: number;
@@ -20,42 +25,43 @@ interface State {
 }
 
 type Action =
-  | { category: 'increase' | 'decrease' | 'remove'; payload: number }
-  | { category: 'saveLater'; payload: number }
-  | { category: 'moveToCart'; payload: number }
-  | { category: 'removeSaved'; payload: number };
+  | { category: "increase" | "decrease" | "remove"; payload: number }
+  | { category: "saveLater"; payload: number }
+  | { category: "moveToCart"; payload: number }
+  | { category: "removeSaved"; payload: number };
 
 const initialData: Product[] = [
   {
     id: 1,
-    title: 'Wireless Headphones',
+    title: "Wireless Headphones",
     price: 59.99,
     image: vehicles,
-    category: 'Electronics',
+    category: "Electronics",
     quantity: 1,
   },
   {
     id: 2,
-    title: 'Running Shoes',
+    title: "Running Shoes",
     price: 89.49,
     image: vehicles,
-    category: 'Footwear',
+    category: "Footwear",
     quantity: 1,
   },
   {
     id: 3,
-    title: 'Cotton T-shirt',
+    title: "Cotton T-shirt",
     price: 19.99,
     image: vehicles,
-    category: 'Clothing',
+    category: "Clothing",
     quantity: 1,
   },
 ];
 
 export default function Cart() {
-  const sellerName = 'Raja';
+  const sellerName = "Raja";
   const navigate = useNavigate();
 
+  const [isPlaceOrder, setIsPlaceOrder] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
     cartItems: initialData,
     savedItems: [],
@@ -65,16 +71,16 @@ export default function Cart() {
     const { cartItems, savedItems } = state;
 
     switch (action.category) {
-      case 'increase':
-      case 'decrease':
+      case "increase":
+      case "decrease":
         return {
           ...state,
-          cartItems: cartItems.map(item =>
+          cartItems: cartItems.map((item) =>
             item.id === action.payload
               ? {
                   ...item,
                   quantity:
-                    action.category === 'increase'
+                    action.category === "increase"
                       ? item.quantity + 1
                       : Math.max(1, item.quantity - 1),
                 }
@@ -82,45 +88,68 @@ export default function Cart() {
           ),
         };
 
-      case 'remove':
+      case "remove":
         return {
           ...state,
-          cartItems: cartItems.filter(item => item.id !== action.payload),
+          cartItems: cartItems.filter((item) => item.id !== action.payload),
         };
 
-      case 'saveLater': {
-        const itemToSave = cartItems.find(i => i.id === action.payload);
+      case "saveLater": {
+        const itemToSave = cartItems.find((i) => i.id === action.payload);
         if (!itemToSave) return state;
 
         return {
           ...state,
-          cartItems: cartItems.filter(i => i.id !== action.payload),
+          cartItems: cartItems.filter((i) => i.id !== action.payload),
           savedItems: [...savedItems, itemToSave],
         };
       }
 
-      case 'moveToCart': {
-        const itemToMove = savedItems.find(i => i.id === action.payload);
+      case "moveToCart": {
+        const itemToMove = savedItems.find((i) => i.id === action.payload);
         if (!itemToMove) return state;
 
         return {
           ...state,
-          savedItems: savedItems.filter(i => i.id !== action.payload),
+          savedItems: savedItems.filter((i) => i.id !== action.payload),
           cartItems: [...cartItems, itemToMove],
         };
       }
 
-      case 'removeSaved':
+      case "removeSaved":
         return {
           ...state,
-          savedItems: savedItems.filter(i => i.id !== action.payload),
+          savedItems: savedItems.filter((i) => i.id !== action.payload),
         };
 
       default:
         return state;
     }
   }
-
+  const steps = [
+    {
+      title: "Order Summary",
+      content: <OrderSummary />,
+    },
+    {
+      title: "Address",
+      content: <AddressSection />,
+    },
+    {
+      title: "Payment",
+      content: <OrderPayment />,
+    },
+    {
+      title: "Confirmation",
+      content: (
+        <OrderSuccess
+          orderId="ORD12345678"
+          paymentId="PAY987654321"
+          onContinue={() => navigate("/")}
+        />
+      ),
+    },
+  ];
   const navigateProductPage = (id: number) => {
     navigate(`/productpage/${id}`);
   };
@@ -131,16 +160,31 @@ export default function Cart() {
   );
 
   const renderItemCard = (item: Product, isSaved = false) => (
-    <div key={item.id} className="border-b border-ring/30 pb-4 relative last:border-0">
+    <div
+      key={item.id}
+      className="border-b border-ring/30 pb-4 relative last:border-0"
+    >
       <div className="grid grid-cols-3 gap-8 px-5">
-        <div onClick={() => navigateProductPage(item.id)} className="cursor-pointer">
-          <img src={item.image} alt={item.title} className="object-contain mx-auto" />
+        <div
+          onClick={() => navigateProductPage(item.id)}
+          className="cursor-pointer"
+        >
+          <img
+            src={item.image}
+            alt={item.title}
+            className="object-contain mx-auto"
+          />
         </div>
 
-        <div onClick={() => navigateProductPage(item.id)} className="col-span-2 cursor-pointer">
+        <div
+          onClick={() => navigateProductPage(item.id)}
+          className="col-span-2 cursor-pointer"
+        >
           <h4 className="text-lg font-semibold">{item.title}</h4>
           <p className="text-sm text-gray-500">{item.category}</p>
-          <p className="text-xs text-gray-400">Seller: <strong>{sellerName}</strong></p>
+          <p className="text-xs text-gray-400">
+            Seller: <strong>{sellerName}</strong>
+          </p>
           <h2 className="text-xl mt-2 font-bold text-create">
             ${Number(item.price * item.quantity).toFixed(2)}
           </h2>
@@ -153,7 +197,9 @@ export default function Cart() {
             <>
               <ImageButton
                 className="bg-create p-2 text-white rounded"
-                onClick={() => dispatch({ category: 'decrease', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "decrease", payload: item.id })
+                }
                 disabled={item.quantity === 1}
                 icon="minus"
               />
@@ -165,7 +211,9 @@ export default function Cart() {
               />
               <ImageButton
                 className="bg-create p-2 text-white rounded"
-                onClick={() => dispatch({ category: 'increase', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "increase", payload: item.id })
+                }
                 icon="plus"
               />
             </>
@@ -177,13 +225,17 @@ export default function Cart() {
             <>
               <AnimateButton
                 className="bg-create/90"
-                onClick={() => dispatch({ category: 'moveToCart', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "moveToCart", payload: item.id })
+                }
                 label="Move to cart"
                 mode="cart"
               />
               <AnimateButton
                 className="bg-update"
-                onClick={() => dispatch({ category: 'removeSaved', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "removeSaved", payload: item.id })
+                }
                 label="Remove"
                 mode="delete"
               />
@@ -192,12 +244,16 @@ export default function Cart() {
             <>
               <Button
                 className="text-create cursor-pointer hover:border hover:border-ring/30"
-                onClick={() => dispatch({ category: 'saveLater', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "saveLater", payload: item.id })
+                }
                 label="Save for Later"
               />
               <AnimateButton
                 className="bg-update"
-                onClick={() => dispatch({ category: 'remove', payload: item.id })}
+                onClick={() =>
+                  dispatch({ category: "remove", payload: item.id })
+                }
                 label="Remove"
                 mode="delete"
               />
@@ -212,16 +268,15 @@ export default function Cart() {
     <div className="grid lg:grid-cols-[1fr_320px] my-10 lg:px-[10%] gap-10 p-5">
       {/* Left: Cart Items */}
       <div className="space-y-8 overflow-auto">
-        
         <div className="space-y-4 p-5 border border-ring/30 rounded-md">
-          {state.cartItems.map(item => renderItemCard(item))}
+          {state.cartItems.map((item) => renderItemCard(item))}
         </div>
 
         {state.savedItems.length > 0 && (
-          <div className=' border border-ring/30 mt-20 rounded-md p-5'>
+          <div className=" border border-ring/30 mt-20 rounded-md p-5">
             <h3 className="text-xl font-semibold mb-4 ">Saved for Later</h3>
             <div className="mt-4 space-y-4 border-b last:border-0 pt-4">
-              {state.savedItems.map(item => renderItemCard(item, true))}
+              {state.savedItems.map((item) => renderItemCard(item, true))}
             </div>
           </div>
         )}
@@ -230,10 +285,12 @@ export default function Cart() {
       {/* Right: Sticky Price Summary */}
       <div className="w-full max-w-sm mx-auto shadow shadow-ring/40 p-5 space-y-4 lg:sticky top-20 self-start h-fit">
         <h4 className="text-lg font-bold text-update">Price Details</h4>
-        <hr className='text-ring/30' />
+        <hr className="text-ring/30" />
         <div className="grid grid-cols-5">
           <p className="col-span-4">
-            Price ({state.cartItems.reduce((acc, item) => acc + item.quantity, 0)} items)
+            Price (
+            {state.cartItems.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+            items)
           </p>
           <p className="text-right">${totalPrice.toFixed(2)}</p>
         </div>
@@ -245,15 +302,26 @@ export default function Cart() {
           <p className="col-span-4">Delivery Charges</p>
           <p className="text-right">Free</p>
         </div>
-        <hr className='text-ring/30' />
+        <hr className="text-ring/30" />
         <div className="grid grid-cols-5 font-semibold">
           <p className="col-span-4">Total Amount</p>
           <p className="text-right">${totalPrice.toFixed(2)}</p>
         </div>
-        <button className="bg-update w-full py-2 text-white font-medium rounded hover:bg-orange-600 transition">
+        <button
+          onClick={() => setIsPlaceOrder(!isPlaceOrder)}
+          className="bg-update cursor-pointer w-full py-2 text-white font-medium rounded transition"
+        >
           Place Order
         </button>
       </div>
+      {isPlaceOrder && (
+        <div className="fixed top-1/2 z-10000 left-1/2 w-full p-2 lg:w-[80%] h-[90vh] transform -translate-x-1/2 -translate-y-1/2 shadow overflow-scroll scrollbar-hide">
+          <Stepper steps={steps} onClose={() => setIsPlaceOrder(!isPlaceOrder)} onFinish={() => navigate("/")} />
+        </div>
+      )}
+      {isPlaceOrder && (
+        <div className="fixed z-1000 top-1/2 left-1/2 w-full h-full bg-black/50 transform -translate-x-1/2 -translate-y-1/2"></div>
+      )}
     </div>
   );
 }
